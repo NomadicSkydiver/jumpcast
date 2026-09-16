@@ -5,7 +5,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, "public")));
-
+const weatherCache = new Map();
+const CACHE_MS = 10 * 60 * 1000;
 const DZ = {
   "Skydive Midwest": { icao: "KDET", lat: 42.409, lon: -83.009, elevation_ft: 626 },
   "Skydive Chicago": { icao: "KARR", lat: 41.771, lon: -88.475, elevation_ft: 712 },
