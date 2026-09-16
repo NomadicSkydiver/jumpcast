@@ -63,5 +63,5 @@ app.get("/api/weather", async (req,res) => {
   }
 });
 
-app.get("*", (req,res) => res.sendFile(path.join(__dirname,"public","index.html")));
+app.get(/.*/, (req,res) => res.sendFile(path.join(__dirname,"public","index.html")));
 app.listen(PORT, "0.0.0.0", () => console.log(`JumpCast running on http://localhost:${PORT}`));
