@@ -640,7 +640,17 @@ app.get("/Screenshot_20260917-192839.Photos.png",(req,res)=>{
     path.join(__dirname,"Screenshot_20260917-192839.Photos.png")
   );
 });
+app.get("/Screenshot_20260713-211034.Photos~3.jpg",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"Screenshot_20260713-211034.Photos~3.jpg")
+  );
+});
 
+app.get("/Screenshot_20260917-191104.Photos.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"Screenshot_20260917-191104.Photos.png")
+  );
+});
 app.get("/manifest.webmanifest",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"manifest.webmanifest")
