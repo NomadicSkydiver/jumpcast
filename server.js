@@ -5,7 +5,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, "public")));
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 const weatherCache = new Map();
 const CACHE_MS = 60 * 60 * 1000;
 const DROPZONE_CACHE_MS = 24 * 60 * 60 * 1000;
