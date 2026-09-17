@@ -111,7 +111,11 @@ function normalizeUspaDropzone(raw){
   const lat=Number(raw.Latitude);
   const lon=Number(raw.Longitude);
   const name=String(raw.AccountName||"").trim();
-
+const physicalAddress=String(
+  raw.PhysicalAddress ||
+  raw.Address ||
+  ""
+).trim();
   if(!Number.isFinite(lat)||!Number.isFinite(lon)||!name)return null;
 
   const airport=String(raw.AirportName||"").trim();
@@ -119,6 +123,8 @@ function normalizeUspaDropzone(raw){
   return {
     id:String(raw.Id),
     name,
+physicalAddress,
+
     icao:deriveIcao(airport,country),
     lat,
     lon,
