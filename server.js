@@ -634,6 +634,13 @@ app.get("/file_00000000ee2881f5a3a88a27e4388551.jpg",(req,res)=>{
     path.join(__dirname,"file_00000000ee2881f5a3a88a27e4388551.jpg")
   );
 });
+
+app.get("/Screenshot_20260917-192839.Photos.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"Screenshot_20260917-192839.Photos.png")
+  );
+});
+
 app.get("/manifest.webmanifest",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"manifest.webmanifest")
