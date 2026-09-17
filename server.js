@@ -594,7 +594,35 @@ async function getWeatherForDropzone(
     targetAltitudeFt
   );
 }
+app.get("/sw.js",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"sw.js")
+  );
+});
 
+app.get("/manifest.webmanifest",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"manifest.webmanifest")
+  );
+});
+
+app.get("/icon.svg",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"icon.svg")
+  );
+});
+
+app.get("/jumpcast-icon-192.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"jumpcast-icon-192.png")
+  );
+});
+
+app.get("/jumpcast-icon-512.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"jumpcast-icon-512.png")
+  );
+});
 app.get("/",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"index.html")
