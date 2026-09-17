@@ -1,4 +1,11 @@
 (() => {
+    const COORDINATE_OVERRIDES = {
+    "Skydive Tecumseh": {
+      lat: 42.174165,
+      lon: -84.261341
+    }
+  };
+  
   function addStyles() {
     if (document.getElementById("jumpcast-profile-styles")) return;
 
@@ -188,15 +195,26 @@
             " ft MSL"
           : "Not listed";
 
-      const latitude =
-        Number.isFinite(Number(dz.lat))
-          ? Number(dz.lat).toFixed(5)
-          : null;
+      const override =
+  COORDINATE_OVERRIDES[dz.name] || null;
 
-      const longitude =
-        Number.isFinite(Number(dz.lon))
-          ? Number(dz.lon).toFixed(5)
-          : null;
+const latitudeNumber = override
+  ? override.lat
+  : Number(dz.lat);
+
+const longitudeNumber = override
+  ? override.lon
+  : Number(dz.lon);
+
+const latitude =
+  Number.isFinite(latitudeNumber)
+    ? latitudeNumber.toFixed(5)
+    : null;
+
+const longitude =
+  Number.isFinite(longitudeNumber)
+    ? longitudeNumber.toFixed(5)
+    : null;
 
       const phone =
         String(dz.phone || "").trim();
@@ -208,12 +226,25 @@
         latitude !== null &&
         longitude !== null;
 
-      const mapsUrl = hasCoordinates
-        ? "https://www.google.com/maps/search/?api=1&query=" +
-          encodeURIComponent(
-            latitude + "," + longitude
-          )
-        : "";
+      const mapQuery = hasCoordinates
+  ? latitude + "," + longitude
+  : [
+      dz.name,
+      dz.airport,
+      location
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+const mapsUrl = mapQuery
+  ? "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(mapQuery)
+  : "";
+
+const directionsUrl = mapQuery
+  ? "https://www.google.com/maps/dir/?api=1&destination=" +
+    encodeURIComponent(mapQuery)
+  : "";
 
       const phoneUrl = phone
         ? "tel:" + phone.replace(/[^\d+]/g, "")
@@ -303,7 +334,7 @@
               ? `
                 <a
                   class="jumpcast-profile-action"
-                  href="${mapsUrl}"
+                  href="${directionsUrl}"
                   target="_blank"
                   rel="noopener"
                 >
