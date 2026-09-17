@@ -613,7 +613,11 @@ app.get("/sw.js",(req,res)=>{
     path.join(__dirname,"sw.js")
   );
 });
-
+app.get("/file_00000000ee2881f5a3a88a27e4388551.jpg",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"file_00000000ee2881f5a3a88a27e4388551.jpg")
+  );
+});
 app.get("/manifest.webmanifest",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"manifest.webmanifest")
