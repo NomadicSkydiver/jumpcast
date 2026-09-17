@@ -5,7 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const weatherCache = new Map();
-const WEATHER_CACHE_MS = 5 * 60 * 1000;
+const WEATHER_CACHE_MS = 15 * 60 * 1000;
 const DROPZONE_CACHE_MS = 24 * 60 * 60 * 1000;
 const USPA_TIMEOUT_MS = 12000;
 
@@ -556,15 +556,27 @@ async function getWeatherForDropzone(
   let forecast;
 
   try{
-    forecast=await fetchJson(
-      weatherUrl,
-      {},
-      15000
+  forecast=await fetchJson(
+    weatherUrl,
+    {},
+    15000
+  );
+}catch(error){
+  if(cached && cached.data){
+    console.error(
+      `Weather provider unavailable for ${dz.name}; using cached weather:`,
+      error.message
     );
-  }catch(error){
-    throw new Error(
-      `Weather provider unavailable: ${error.message}`
+
+    return addJumpWindData(
+      cached.data,
+      targetAltitudeFt
     );
+  }
+
+  throw new Error(
+    `Weather provider unavailable: ${error.message}`
+  );
   }
 
   let metar=[];
