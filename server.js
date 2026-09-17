@@ -12,7 +12,13 @@ const USPA_TIMEOUT_MS = 12000;
 const PRESSURE_LEVELS = [
   1000,975,950,925,900,875,850,825,800,775,750,725,
   700,675,650,625,600,575,550,525,500,475,450
-];
+]; const VERIFIED_LOCATION_OVERRIDES = {
+  "Midwest Freefall": {
+    address: "62912 Kunstman Road, Ray, MI 48096",
+    lat: 42.75956,
+    lon: -82.94168
+  }
+};
 
 const FALLBACK_DZ = {
   "fallback-midwest": {
@@ -108,10 +114,19 @@ function normalizeUspaDropzone(raw){
   if(!["US","Canada","Mexico"].includes(country))return null;
   if(SKIP_USPA_IDS.has(String(raw.Id)))return null;
 
-  const lat=Number(raw.Latitude);
-  const lon=Number(raw.Longitude);
   const name=String(raw.AccountName||"").trim();
+const verified=VERIFIED_LOCATION_OVERRIDES[name] || {};
+
+const lat=Number(
+  verified.lat ?? raw.Latitude
+);
+
+const lon=Number(
+  verified.lon ?? raw.Longitude
+);
+
 const physicalAddress=String(
+  verified.address ||
   raw.PhysicalAddress ||
   raw.Address ||
   ""
