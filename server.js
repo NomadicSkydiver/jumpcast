@@ -617,7 +617,17 @@ app.get("/jumpcast-icon-192.png",(req,res)=>{
     path.join(__dirname,"jumpcast-icon-192.png")
   );
 });
+app.get("/jumpcast-icon-192-v3.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"jumpcast-icon-192-v3.png")
+  );
+});
 
+app.get("/jumpcast-icon-512-v3.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"jumpcast-icon-512-v3.png")
+  );
+});
 app.get("/jumpcast-icon-512.png",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"jumpcast-icon-512.png")
