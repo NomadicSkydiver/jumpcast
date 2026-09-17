@@ -1,240 +1,171 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>JumpCast</title>
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1"
->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<meta
-  name="theme-color"
-  content="#07111f"
->
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #07111f;
+      color: #f5f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-<title>JumpCast</title>
+    .app {
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 24px 18px 40px;
+    }
 
-<style>
+    .logo {
+      font-size: 34px;
+      font-weight: 800;
+      margin: 10px 0 6px;
+    }
 
-:root{
-  --bg:#07111f;
-  --card:#0d1b2d;
-  --card2:#0a1728;
-  --text:#f5f8fc;
-  --muted:#91a4ba;
-  --accent:#65d6ff;
-  --good:#65e6a2;
-  --warn:#ffd166;
-  --bad:#ff6b6b;
-  --line:#1b3048;
-}
+    .tagline {
+      color: #9eabbc;
+      font-size: 15px;
+      margin-bottom: 28px;
+    }
 
-*{
-  box-sizing:border-box;
-}
+    .card {
+      background: #101c2d;
+      border: 1px solid #23344b;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
 
-html{
-  background:var(--bg);
-}
+    h2 {
+      font-size: 18px;
+      margin: 0 0 14px;
+    }
 
-body{
-  margin:0;
-  background:
-    linear-gradient(
-      160deg,
-      #07111f,
-      #0a1728 55%,
-      #07111f
-    );
-  color:var(--text);
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-}
+    label {
+      display: block;
+      color: #aeb9c8;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
 
-.app{
-  width:100%;
-  max-width:560px;
-  min-height:100vh;
-  margin:auto;
-  padding:18px 16px 35px;
-}
+    select,
+    input {
+      width: 100%;
+      border: 1px solid #31445e;
+      border-radius: 12px;
+      background: #0a1525;
+      color: #fff;
+      padding: 13px;
+      font-size: 16px;
+    }
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:12px;
-}
+    .status {
+      font-size: 17px;
+      line-height: 1.5;
+    }
 
-.brand{
-  font-size:29px;
-  line-height:1;
-  font-weight:950;
-  letter-spacing:-1px;
-}
+    .muted {
+      color: #9eabbc;
+      line-height: 1.5;
+    }
 
-.brand span{
-  color:var(--accent);
-}
+    .footer {
+      text-align: center;
+      color: #66758a;
+      font-size: 12px;
+      margin-top: 28px;
+    }
+  </style>
+</head>
 
-.tag{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:11px;
-}
+<body>
 
-.refresh{
-  width:70px;
-  height:70px;
-  border:0;
-  border-radius:20px;
-  background:#10243a;
-  color:white;
-  font-size:28px;
-}
+  <main class="app">
 
-.card{
-  margin:12px 0;
-  padding:17px;
-  border:1px solid var(--line);
-  border-radius:20px;
-  background:#0d1b2df2;
-}
+    <div class="logo">JumpCast</div>
 
-.label{
-  color:var(--muted);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
+    <div class="tagline">
+      Skydiving weather information at a glance.
+    </div>
 
-.controls{
-  display:grid;
-  grid-template-columns:1.1fr 1fr;
-  gap:10px;
-  margin-top:10px;
-}
+    <section class="card">
+      <h2>Drop Zone</h2>
 
-select,
-input{
-  width:100%;
-  min-width:0;
-  padding:14px 12px;
-  border:1px solid var(--line);
-  border-radius:13px;
-  outline:none;
-  background:#14263c;
-  color:white;
-  font-size:16px;
-}
+      <label for="dz">
+        Select a drop zone
+      </label>
 
-.altInfo{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  margin-top:11px;
-  padding:13px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:var(--card2);
-}
+      <select id="dz">
+        <option>Skydive Midwest</option>
+        <option>Skydive Chicago</option>
+        <option>Skydive Sebastian</option>
+      </select>
+    </section>
 
-.altNumber{
-  margin-top:4px;
-  font-size:23px;
-  font-weight:950;
-}
+    <section class="card">
+      <h2>Jump Altitude</h2>
 
-.altUnit{
-  color:var(--muted);
-  font-size:11px;
-  font-weight:800;
-}
+      <label for="alt">
+        Altitude MSL (feet)
+      </label>
 
-.hero{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:15px;
-}
+      <input
+        id="alt"
+        type="number"
+        value="12500"
+        min="1000"
+        max="20000"
+        step="500"
+      >
+    </section>
 
-.heroTitle{
-  margin-top:5px;
-  font-size:21px;
-  font-weight:950;
-}
+    <section class="card">
+      <h2>Live Conditions</h2>
 
-.heroSub{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.5;
-}
+      <div class="status">
+        JumpCast is loading.
+      </div>
 
-.wind{
-  min-width:120px;
-  text-align:right;
-}
+      <p class="muted">
+        We're confirming the basic website is working before adding
+        the live weather display.
+      </p>
+    </section>
 
-.windNumber{
-  font-size:42px;
-  line-height:.95;
-  font-weight:950;
-}
+    <section class="card">
+      <h2>Community Reports</h2>
 
-.windUnit{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:11px;
-  font-weight:850;
-}
+      <p class="muted">
+        Community reports will appear here in a future update.
+      </p>
+    </section>
 
-.windDirection{
-  margin-top:6px;
-  color:var(--accent);
-  font-size:18px;
-  font-weight:950;
-}
+    <section class="card">
+      <h2>Safety &amp; Data Note</h2>
 
-.windDegrees{
-  color:var(--muted);
-  font-size:11px;
-}
+      <p class="muted">
+        JumpCast provides weather information and model-derived wind
+        estimates. It does not authorize a jump or replace the DZ's
+        operating decision, pilot or instructor judgment, applicable
+        regulations, or current local observations.
+      </p>
+    </section>
 
-.profile{
-  margin-top:14px;
-  padding:14px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:var(--card2);
-}
+    <div class="footer">
+      JumpCast • Weather information for skydivers
+    </div>
 
-.profileTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
+  </main>
 
-.profileSpeed{
-  margin-top:3px;
-  font-size:27px;
-  font-weight:950;
-}
-
-.profileDirection{
-  color:var(--accent);
-  font-weight:900;
-}
-
-.note{
-  color:var(--muted);
-  font-size:11px;
-  line
+</body>
+</html>
