@@ -1,49 +1,96 @@
 (() => {
-  const style = document.createElement("style");
-  style.textContent = `
-    .profile-title {
-      font-size: 25px;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-top: 4px;
-    }
+  function addStyles() {
+    if (document.getElementById("jumpcast-profile-styles")) return;
 
-    .profile-location {
-      color: #9fb1c8;
-      font-size: 14px;
-      margin: 6px 0 15px;
-    }
+    const style = document.createElement("style");
+    style.id = "jumpcast-profile-styles";
 
-    .profile-grid {
-      margin-top: 8px;
-    }
+    style.textContent = `
+      .jumpcast-profile-title {
+        font-size: 25px;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-top: 4px;
+      }
 
-    .profile-grid .metric-value {
-      font-size: 14px;
-      overflow-wrap: anywhere;
-    }
-  `;
-  document.head.appendChild(style);
+      .jumpcast-profile-location {
+        color: #9fb1c8;
+        font-size: 14px;
+        margin: 6px 0 15px;
+      }
 
-  const card = document.createElement("section");
-  card.className = "card";
-  card.id = "dzProfileCard";
+      .jumpcast-profile-grid {
+        margin-top: 8px;
+      }
 
-  const nearbyCard =
-    document.querySelector("#nearbyButton")?.closest(".card");
+      .jumpcast-profile-grid .metric-value {
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+    `;
 
-  if (nearbyCard) {
-    nearbyCard.insertAdjacentElement("afterend", card);
-  } else {
-    document.querySelector(".app")?.appendChild(card);
+    document.head.appendChild(style);
   }
 
-  const dzSelect = document.getElementById("dz");
+  function findCommunityCard() {
+    const headings = Array.from(
+      document.querySelectorAll("h2")
+    );
+
+    const heading = headings.find(
+      h =>
+        h.textContent.trim().toLowerCase() ===
+        "community reports"
+    );
+
+    return heading ? heading.closest(".card") : null;
+  }
+
+  function createCard() {
+    let card =
+      document.getElementById("dzProfileCard");
+
+    if (card) return card;
+
+    card = document.createElement("section");
+    card.className = "card";
+    card.id = "dzProfileCard";
+
+    card.innerHTML = `
+      <h2>Drop Zone Profile</h2>
+      <p class="muted">
+        Select a drop zone to view its profile.
+      </p>
+    `;
+
+    const communityCard = findCommunityCard();
+
+    if (communityCard && communityCard.parentNode) {
+      communityCard.parentNode.insertBefore(
+        card,
+        communityCard
+      );
+    } else {
+      const app =
+        document.querySelector(".app");
+
+      if (app) {
+        app.appendChild(card);
+      }
+    }
+
+    return card;
+  }
 
   async function updateProfile() {
-    const id = dzSelect?.value;
+    const card = createCard();
 
-    if (!id) {
+    if (!card) return;
+
+    const select =
+      document.getElementById("dz");
+
+    if (!select || !select.value) {
       card.innerHTML = `
         <h2>Drop Zone Profile</h2>
         <p class="muted">
@@ -55,19 +102,28 @@
 
     try {
       const response = await fetch(
-        "/api/dropzones?profile=1&ts=" + Date.now(),
-        { cache: "no-store" }
+        "/api/dropzones?profile=1&ts=" +
+        Date.now(),
+        {
+          cache: "no-store"
+        }
       );
 
       if (!response.ok) {
-        throw new Error("HTTP " + response.status);
+        throw new Error(
+          "HTTP " + response.status
+        );
       }
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      const dz = (data.dropzones || []).find(
-        item => String(item.id) === String(id)
-      );
+      const dz =
+        (data.dropzones || []).find(
+          item =>
+            String(item.id) ===
+            String(select.value)
+        );
 
       if (!dz) {
         card.innerHTML = `
@@ -83,72 +139,92 @@
         dz.city,
         dz.state,
         dz.country
-      ].filter(Boolean).join(", ");
+      ]
+        .filter(Boolean)
+        .join(", ");
 
       const elevation =
-        Number.isFinite(Number(dz.elevation_ft))
-          ? Math.round(Number(dz.elevation_ft)).toLocaleString() + " ft MSL"
+        Number.isFinite(
+          Number(dz.elevation_ft)
+        )
+          ? Math.round(
+              Number(dz.elevation_ft)
+            ).toLocaleString() +
+            " ft MSL"
           : "Not listed";
+
+      const latitude =
+        Number.isFinite(Number(dz.lat))
+          ? Number(dz.lat).toFixed(5)
+          : "—";
+
+      const longitude =
+        Number.isFinite(Number(dz.lon))
+          ? Number(dz.lon).toFixed(5)
+          : "—";
 
       card.innerHTML = `
         <h2>Drop Zone Profile</h2>
 
-        <div class="profile-title">
+        <div class="jumpcast-profile-title">
           ${dz.name || "Drop Zone"}
         </div>
 
-        <div class="profile-location">
+        <div class="jumpcast-profile-location">
           ${location || "Location unavailable"}
         </div>
 
-        <div class="weather-grid profile-grid">
+        <div class="weather-grid jumpcast-profile-grid">
 
           <div class="metric">
-            <div class="metric-title">Airport</div>
+            <div class="metric-title">
+              Airport
+            </div>
             <div class="metric-value">
               ${dz.airport || "Not listed"}
             </div>
           </div>
 
           <div class="metric">
-            <div class="metric-title">ICAO</div>
+            <div class="metric-title">
+              ICAO
+            </div>
             <div class="metric-value">
               ${dz.icao || "Not listed"}
             </div>
           </div>
 
           <div class="metric">
-            <div class="metric-title">Elevation</div>
+            <div class="metric-title">
+              Elevation
+            </div>
             <div class="metric-value">
               ${elevation}
             </div>
           </div>
 
           <div class="metric">
-            <div class="metric-title">Coordinates</div>
+            <div class="metric-title">
+              Coordinates
+            </div>
             <div class="metric-value">
-              ${
-                Number.isFinite(Number(dz.lat))
-                  ? Number(dz.lat).toFixed(5)
-                  : "—"
-              },
-              ${
-                Number.isFinite(Number(dz.lon))
-                  ? Number(dz.lon).toFixed(5)
-                  : "—"
-              }
+              ${latitude}, ${longitude}
             </div>
           </div>
 
           <div class="metric">
-            <div class="metric-title">Phone</div>
+            <div class="metric-title">
+              Phone
+            </div>
             <div class="metric-value">
               ${dz.phone || "Not listed"}
             </div>
           </div>
 
           <div class="metric">
-            <div class="metric-title">Email</div>
+            <div class="metric-title">
+              Email
+            </div>
             <div class="metric-value">
               ${dz.email || "Not listed"}
             </div>
@@ -157,29 +233,57 @@
         </div>
 
         <div class="source">
-          Information from the current JumpCast
-          USPA-affiliated drop-zone directory.
+          Information from the current
+          JumpCast USPA-affiliated directory.
         </div>
       `;
+
     } catch (error) {
-      console.error("Drop Zone Profile error:", error);
+      console.error(
+        "Drop Zone Profile error:",
+        error
+      );
 
       card.innerHTML = `
         <h2>Drop Zone Profile</h2>
         <p class="muted">
-          Profile information is temporarily unavailable.
+          Profile information is temporarily
+          unavailable.
         </p>
       `;
     }
   }
 
-  if (dzSelect) {
-    dzSelect.addEventListener("change", updateProfile);
+  function start() {
+    addStyles();
+    createCard();
+    updateProfile();
 
-    setInterval(() => {
-      updateProfile();
-    }, 3000);
+    const select =
+      document.getElementById("dz");
+
+    if (select) {
+      select.addEventListener(
+        "change",
+        () => {
+          setTimeout(
+            updateProfile,
+            100
+          );
+        }
+      );
+    }
   }
 
-  updateProfile();
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+    document.addEventListener(
+      "DOMContentLoaded",
+      start
+    );
+  } else {
+    start();
+  }
 })();
