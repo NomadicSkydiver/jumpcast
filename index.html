@@ -65,6 +65,36 @@
       line-height: 1.5;
       margin-top: 9px;
     }
+    .favorite-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .favorite-button,
+    .remove-favorite-button {
+      border: 1px solid #344963;
+      border-radius: 12px;
+      background: #091526;
+      color: #fff;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .favorite-button {
+      flex: 1;
+    }
+    .favorite-button.active {
+      border-color: #6d8fb8;
+    }
+    .remove-favorite-button {
+      display: none;
+    }
+    .favorite-status {
+      color: #8f9eb1;
+      font-size: 12px;
+      margin-top: 8px;
+    }
     .alt-info {
       display: flex;
       justify-content: space-between;
@@ -178,6 +208,26 @@
     <div id="dzMeta" class="dz-meta">
       Loading the current USPA-affiliated directory...
     </div>
+
+    <div class="favorite-row">
+      <button id="favoriteButton" class="favorite-button" type="button">
+        ☆ Add to Favorites
+      </button>
+    </div>
+    <div id="favoriteStatus" class="favorite-status"></div>
+  </section>
+
+  <section class="card">
+    <h2>Favorites</h2>
+    <label for="favorites">Your favorite drop zones</label>
+    <select id="favorites">
+      <option value="">No favorites yet</option>
+    </select>
+    <div class="favorite-row">
+      <button id="removeFavoriteButton" class="remove-favorite-button" type="button">
+        Remove Favorite
+      </button>
+    </div>
   </section>
 
   <section class="card">
@@ -254,6 +304,10 @@
 const dzEl = document.getElementById("dz");
 const dzSearchEl = document.getElementById("dzSearch");
 const dzMetaEl = document.getElementById("dzMeta");
+const favoriteButtonEl = document.getElementById("favoriteButton");
+const favoriteStatusEl = document.getElementById("favoriteStatus");
+const favoritesEl = document.getElementById("favorites");
+const removeFavoriteButtonEl = document.getElementById("removeFavoriteButton");
 const altEl = document.getElementById("alt");
 const mslEl = document.getElementById("msl");
 const aglEl = document.getElementById("agl");
@@ -265,6 +319,105 @@ const metarEl = document.getElementById("metar");
 
 let allDropzones = [];
 let selectedDropzone = null;
+let favoriteDropzoneIds = JSON.parse(
+  localStorage.getItem("jumpcastFavorites") || "[]"
+);
+
+function saveFavorites() {
+  localStorage.setItem(
+    "jumpcastFavorites",
+    JSON.stringify(favoriteDropzoneIds)
+  );
+}
+
+function isFavorite(id) {
+  return favoriteDropzoneIds.includes(id);
+}
+
+function renderFavorites() {
+  const validIds = new Set(allDropzones.map(dz => dz.id));
+  favoriteDropzoneIds = favoriteDropzoneIds.filter(id => validIds.has(id));
+  saveFavorites();
+
+  favoritesEl.innerHTML = "";
+
+  if (!favoriteDropzoneIds.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No favorites yet";
+    favoritesEl.appendChild(option);
+    removeFavoriteButtonEl.style.display = "none";
+    updateFavoriteButton();
+    return;
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Select a favorite...";
+  favoritesEl.appendChild(placeholder);
+
+  favoriteDropzoneIds
+    .map(id => allDropzones.find(dz => dz.id === id))
+    .filter(Boolean)
+    .forEach(dz => {
+      const option = document.createElement("option");
+      option.value = dz.id;
+      option.textContent = dz.name + (dz.city ? " — " + dz.city : "");
+      favoritesEl.appendChild(option);
+    });
+
+  removeFavoriteButtonEl.style.display =
+    selectedDropzone && isFavorite(selectedDropzone.id)
+      ? "block"
+      : "none";
+
+  updateFavoriteButton();
+}
+
+function updateFavoriteButton() {
+  if (!selectedDropzone) {
+    favoriteButtonEl.textContent = "☆ Add to Favorites";
+    favoriteButtonEl.classList.remove("active");
+    favoriteStatusEl.textContent = "";
+    return;
+  }
+
+  if (isFavorite(selectedDropzone.id)) {
+    favoriteButtonEl.textContent = "★ Remove from Favorites";
+    favoriteButtonEl.classList.add("active");
+    favoriteStatusEl.textContent = "Saved to your favorites on this device.";
+    removeFavoriteButtonEl.style.display = "block";
+  } else {
+    favoriteButtonEl.textContent = "☆ Add to Favorites";
+    favoriteButtonEl.classList.remove("active");
+    favoriteStatusEl.textContent = "";
+    removeFavoriteButtonEl.style.display = "none";
+  }
+}
+
+function toggleFavorite() {
+  if (!selectedDropzone) return;
+
+  const id = selectedDropzone.id;
+
+  if (isFavorite(id)) {
+    favoriteDropzoneIds = favoriteDropzoneIds.filter(item => item !== id);
+  } else {
+    favoriteDropzoneIds.push(id);
+  }
+
+  saveFavorites();
+  renderFavorites();
+
+  const favoriteIndex = favoriteDropzoneIds.indexOf(id);
+  if (favoriteIndex >= 0) {
+    favoritesEl.value = id;
+  } else {
+    favoritesEl.value = "";
+  }
+
+  updateFavoriteButton();
+}
 
 function number(value, decimals = 0) {
   if (value === null || value === undefined) return "—";
@@ -403,6 +556,13 @@ function updateSelectedDropzone() {
       : "");
 
   updateAltitude();
+  updateFavoriteButton();
+
+  if (isFavorite(selectedDropzone.id)) {
+    favoritesEl.value = selectedDropzone.id;
+  } else {
+    favoritesEl.value = "";
+  }
 }
 
 function updateAltitude() {
@@ -638,165 +798,4 @@ function renderMetar(data) {
     raw = latest;
   } else if (latest && latest.rawOb) {
     raw = latest.rawOb;
-  } else if (latest && latest.raw) {
-    raw = latest.raw;
-  } else {
-    raw = JSON.stringify(latest);
-  }
-
-  metarEl.innerHTML = `
-    <div class="metric">
-      <div class="metric-title">Latest aviation observation</div>
-      <div class="metric-value">${raw}</div>
-    </div>
-  `;
-}
-
-async function loadWeather() {
-  updateAltitude();
-
-  const dz = dzEl.value;
-  const altitude = Number(altEl.value) || 12500;
-
-  if (!dz) return;
-
-  jumpWindEl.innerHTML =
-    '<div class="loading">Loading live conditions...</div>';
-
-  currentEl.innerHTML =
-    '<div class="loading">Loading current conditions...</div>';
-
-  hoursEl.innerHTML =
-    '<div class="loading">Loading hourly forecast...</div>';
-
-  metarEl.innerHTML =
-    '<div class="loading">Loading aviation observation...</div>';
-
-  try {
-    const url =
-      "/api/weather?dz=" +
-      encodeURIComponent(dz) +
-      "&alt=" +
-      encodeURIComponent(altitude);
-
-    const controller = new AbortController();
-
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 30000);
-
-    const response = await fetch(url, {
-      cache: "no-store",
-      signal: controller.signal
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      throw new Error(
-        "Weather request failed: HTTP " + response.status
-      );
-    }
-
-    const data = await response.json();
-
-    selectedDropzone =
-      allDropzones.find(
-        item => item.id === data.dropzone.id
-      ) || selectedDropzone;
-
-    if (selectedDropzone) {
-      selectedDropzone.ground_elevation_ft =
-        data.dropzone.ground_elevation_ft;
-    }
-
-    updateAltitude();
-    renderJumpWind(data);
-    renderCurrent(data);
-    renderHours(data);
-    renderMetar(data);
-
-  } catch (error) {
-    console.error(error);
-
-    jumpWindEl.innerHTML = `
-      <div class="error">Could not load live weather.</div>
-    `;
-
-    currentEl.innerHTML = `
-      <div class="error">
-        Weather data is temporarily unavailable.
-      </div>
-    `;
-
-    hoursEl.innerHTML = `
-      <div class="error">
-        Hourly forecast is temporarily unavailable.
-      </div>
-    `;
-
-    metarEl.innerHTML = `
-      <div class="muted">
-        Aviation observation unavailable.
-      </div>
-    `;
-  }
-}
-
-async function loadDropzones() {
-  try {
-    const response = await fetch("/api/dropzones", {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        "Drop zone directory failed: HTTP " + response.status
-      );
-    }
-
-    const data = await response.json();
-
-    allDropzones = Array.isArray(data.dropzones)
-      ? data.dropzones
-      : [];
-
-    dzMetaEl.textContent =
-      `${data.count || allDropzones.length} current North American USPA-affiliated locations`;
-
-    renderDropzoneOptions();
-
-    await loadWeather();
-
-  } catch (error) {
-    console.error(error);
-
-    dzEl.innerHTML = `
-      <option value="">Could not load drop zone directory</option>
-    `;
-
-    dzMetaEl.textContent =
-      "The USPA directory could not be loaded. Please refresh the page.";
-  }
-}
-
-dzEl.addEventListener("change", () => {
-  updateSelectedDropzone();
-  loadWeather();
-});
-
-dzSearchEl.addEventListener("input", () => {
-  renderDropzoneOptions(dzSearchEl.value);
-});
-
-altEl.addEventListener("change", () => {
-  updateAltitude();
-  loadWeather();
-});
-
-altEl.addEventListener("input", updateAltitude);
-
-loadDropzones();
-</script>
-</body>
-</html>
+  } else if (lat
