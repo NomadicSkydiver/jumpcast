@@ -386,39 +386,79 @@ function groundElevationFt(baseData){
 }
 
 function addJumpWindData(baseData,targetAltitudeFt){
-  const hourly=baseData.forecast.hourly;
-  const groundElevation=groundElevationFt(baseData);
-  const now=Date.now();
+  const hourly = baseData.forecast.hourly;
+  const groundElevation = groundElevationFt(baseData);
 
-  let closestIndex=0;
-  let closestDifference=Infinity;
+  // Open-Meteo returns local wall-clock timestamps because
+  // the request uses timezone=auto. Treat those timestamps
+  // as wall-clock values instead of converting them through
+  // the server/device timezone.
+  const now = new Date();
 
-  hourly.time.forEach((time,index)=>{
-    const difference=
-      Math.abs(new Date(time).getTime()-now);
+  const timeZone =
+    baseData.forecast.timezone ||
+    "UTC";
 
-    if(difference<closestDifference){
-      closestDifference=difference;
-      closestIndex=index;
+  const parts = new Intl.DateTimeFormat(
+    "en-CA",
+    {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }
+  ).formatToParts(now);
+
+  const getPart = type =>
+    parts.find(p => p.type === type)?.value || "00";
+
+  const currentWallClock =
+    `${getPart("year")}-${getPart("month")}-${getPart("day")}T` +
+    `${getPart("hour")}:${getPart("minute")}`;
+
+  let closestIndex = 0;
+  let closestDifference = Infinity;
+
+  hourly.time.forEach((time,index) => {
+    const forecastKey =
+      String(time).slice(0,16);
+
+    const difference =
+      Math.abs(
+        Date.parse(`${forecastKey}:00Z`) -
+        Date.parse(`${currentWallClock}:00Z`)
+      );
+
+    if(difference < closestDifference){
+      closestDifference = difference;
+      closestIndex = index;
     }
   });
 
-  const jumpWind=windAtAltitude(
+  const jumpWind = windAtAltitude(
     hourly,
     closestIndex,
     targetAltitudeFt,
     groundElevation
   );
 
-  const jumpWindSeries=[];
+  const jumpWindSeries = [];
 
+  // Start with the current forecast hour and then
+  // provide the following 11 hours.
   for(
-    let i=closestIndex;
-    i<Math.min(closestIndex+12,hourly.time.length);
+    let i = closestIndex;
+    i < Math.min(
+      closestIndex + 12,
+      hourly.time.length
+    );
     i++
   ){
     jumpWindSeries.push({
-      time:hourly.time[i],
+      time: hourly.time[i],
       ...windAtAltitude(
         hourly,
         i,
@@ -433,14 +473,15 @@ function addJumpWindData(baseData,targetAltitudeFt){
 
     dropzone:{
       ...baseData.dropzone,
-      ground_elevation_ft:Math.round(groundElevation)
+      ground_elevation_ft:
+        Math.round(groundElevation)
     },
 
     jumpAltitude:{
-      msl_ft:targetAltitudeFt,
-      agl_ft:Math.max(
+      msl_ft: targetAltitudeFt,
+      agl_ft: Math.max(
         0,
-        targetAltitudeFt-groundElevation
+        targetAltitudeFt - groundElevation
       )
     },
 
@@ -448,7 +489,6 @@ function addJumpWindData(baseData,targetAltitudeFt){
     jumpWindSeries
   };
 }
-
 async function getWeatherForDropzone(
   dz,
   targetAltitudeFt
