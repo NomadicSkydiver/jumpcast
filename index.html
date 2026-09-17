@@ -39,8 +39,11 @@
   white-space: nowrap;
 }
 
-.nav-links span {
+.nav-links a {
   padding: 8px 2px;
+  color: white;
+text-decoration: none;
+cursor: pointer;
 }
 
 .nav-active {
@@ -63,11 +66,13 @@
     padding: 12px 16px;
   }
 
-  .nav-links,
   .nav-tagline {
     display: none;
   }
-
+.nav-links {
+    gap: 10px;
+    font-size: 12px;
+}
   .nav-brand {
     font-size: 22px;
   }
@@ -366,11 +371,11 @@ input {
   <div class="nav-brand">🪂 <strong>JumpCast</strong></div>
 
   <div class="nav-links">
-    <span class="nav-active">⌂ Home</span>
-    <span>☁ Weather</span>
-    <span>📍 Drop Zones</span>
-    <span>★ Favorites</span>
-    <span>⚙ Settings</span>
+    <a class="nav-active" href="#top">⌂ Home</a>
+    <a href="#weather">☁ Weather</a>
+    <a href="#dropzones">📍 Drop Zones</a>
+    <a href="#favorites">★ Favorites</a>
+    <a href="#settings">⚙ Settings</a>
   </div>
 
   <div class="nav-tagline">SKYDIVING WEATHER<br>AT A GLANCE.</div>
@@ -378,7 +383,7 @@ input {
 <main class="app">
   
 
-  <section class="card">
+  <section class="card" id="settings">
     <h2>Display Settings</h2>
     <div class="settings-grid">
       <div class="settings-item">
@@ -413,7 +418,7 @@ input {
     </div>
   </section>
 
-  <section class="card">
+  <section class="card" id="dropzones">
     <h2>Drop Zone</h2>
     <label for="dzSearch">Find a drop zone</label>
     <input id="dzSearch" class="search" type="search"
@@ -433,7 +438,7 @@ input {
     <div id="favoriteStatus" class="favorite-status"></div>
   </section>
 
-  <section class="card">
+  <section class="card" id="favorites">
     <h2>Favorites</h2>
     <label for="favorites">Your favorite drop zones</label>
     <select id="favorites">
@@ -473,7 +478,7 @@ input {
     <div id="jumpWind"><div class="loading">Loading live conditions...</div></div>
   </section>
 
-  <section class="card">
+  <section class="card" id="weather">
     <h2>Current Conditions</h2>
     <div id="current"><div class="loading">Loading current conditions...</div></div>
   </section>
