@@ -215,7 +215,8 @@ const longitude =
   Number.isFinite(longitudeNumber)
     ? longitudeNumber.toFixed(5)
     : null;
-
+const physicalAddress =
+  String(dz.physicalAddress || "").trim();
       const phone =
         String(dz.phone || "").trim();
 
@@ -226,15 +227,22 @@ const longitude =
         latitude !== null &&
         longitude !== null;
 
-      const mapQuery = hasCoordinates
-  ? latitude + "," + longitude
-  : [
-      dz.name,
-      dz.airport,
+      const mapQuery = physicalAddress
+  ? [
+      physicalAddress,
       location
     ]
       .filter(Boolean)
-      .join(", ");
+      .join(", ")
+  : hasCoordinates
+    ? latitude + "," + longitude
+    : [
+        dz.name,
+        dz.airport,
+        location
+      ]
+        .filter(Boolean)
+        .join(", ");
 
 const mapsUrl = mapQuery
   ? "https://www.google.com/maps/search/?api=1&query=" +
