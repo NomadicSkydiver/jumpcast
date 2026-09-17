@@ -155,7 +155,12 @@ async function fetchJson(url,options={},timeoutMs=15000){
       signal:controller.signal
     });
 
-    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    if(!response.ok){
+  const detail=await response.text().catch(()=>"");
+  throw new Error(
+    `HTTP ${response.status}${detail ? `: ${detail}` : ""}`
+  );
+    }
 
     return await response.json();
   }finally{
