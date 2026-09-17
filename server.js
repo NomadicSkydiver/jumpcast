@@ -5,7 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const weatherCache = new Map();
-const WEATHER_CACHE_MS = 60 * 60 * 1000;
+const WEATHER_CACHE_MS = 5 * 60 * 1000;
 const DROPZONE_CACHE_MS = 24 * 60 * 60 * 1000;
 const USPA_TIMEOUT_MS = 12000;
 
