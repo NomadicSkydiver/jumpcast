@@ -12,7 +12,7 @@ const USPA_TIMEOUT_MS = 12000;
 const PRESSURE_LEVELS = [
   1000,975,950,925,900,875,850,825,800,775,750,725,
   700,675,650,625,600,575,550,525,500,475,450
-
+];
 const FALLBACK_DZ = {
   "fallback-midwest": {
     id:"fallback-midwest",
