@@ -660,16 +660,17 @@ function temperatureText(f) {
   JumpCast's server requests Open-Meteo visibility in kilometers.
   Keep that underlying value in km and convert only for display.
 */
-function visibilityText(km) {
-  const n = Number(km);
-
+function visibilityText(meters) {
+  const n = Number(meters);
   if (!Number.isFinite(n)) return "—";
 
+  const km = n / 1000;
+
   if (displaySettings.visibility === "km") {
-    return `${n.toFixed(1)} km`;
+    return `${km.toFixed(1)} km`;
   }
 
-  return `${(n * 0.621371).toFixed(1)} mi`;
+  return `${(km * 0.621371).toFixed(1)} mi`;
 }
 
 function formatNumber(value, decimals = 0) {
