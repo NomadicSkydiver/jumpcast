@@ -798,4 +798,195 @@ function renderMetar(data) {
     raw = latest;
   } else if (latest && latest.rawOb) {
     raw = latest.rawOb;
-  } else if (lat
+  } else if (latest && latest.raw) {
+    raw = latest.raw;
+  } else {
+    raw = JSON.stringify(latest);
+  }
+
+  metarEl.innerHTML = `
+    <div class="metric">
+      <div class="metric-title">Latest aviation observation</div>
+      <div class="metric-value">${raw}</div>
+    </div>
+  `;
+}
+
+async function loadWeather() {
+  updateAltitude();
+
+  const dz = dzEl.value;
+  const altitude = Number(altEl.value) || 12500;
+
+  if (!dz) return;
+
+  jumpWindEl.innerHTML =
+    '<div class="loading">Loading live conditions...</div>';
+
+  currentEl.innerHTML =
+    '<div class="loading">Loading current conditions...</div>';
+
+  hoursEl.innerHTML =
+    '<div class="loading">Loading hourly forecast...</div>';
+
+  metarEl.innerHTML =
+    '<div class="loading">Loading aviation observation...</div>';
+
+  try {
+    const url =
+      "/api/weather?dz=" +
+      encodeURIComponent(dz) +
+      "&alt=" +
+      encodeURIComponent(altitude);
+
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 30000);
+
+    const response = await fetch(url, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      throw new Error(
+        "Weather request failed: HTTP " + response.status
+      );
+    }
+
+    const data = await response.json();
+
+    selectedDropzone =
+      allDropzones.find(
+        item => item.id === data.dropzone.id
+      ) || selectedDropzone;
+
+    if (selectedDropzone) {
+      selectedDropzone.ground_elevation_ft =
+        data.dropzone.ground_elevation_ft;
+    }
+
+    updateAltitude();
+    renderJumpWind(data);
+    renderCurrent(data);
+    renderHours(data);
+    renderMetar(data);
+
+  } catch (error) {
+    console.error(error);
+
+    jumpWindEl.innerHTML = `
+      <div class="error">Could not load live weather.</div>
+    `;
+
+    currentEl.innerHTML = `
+      <div class="error">
+        Weather data is temporarily unavailable.
+      </div>
+    `;
+
+    hoursEl.innerHTML = `
+      <div class="error">
+        Hourly forecast is temporarily unavailable.
+      </div>
+    `;
+
+    metarEl.innerHTML = `
+      <div class="muted">
+        Aviation observation unavailable.
+      </div>
+    `;
+  }
+}
+
+async function loadDropzones() {
+  try {
+    const response = await fetch("/api/dropzones", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        "Drop zone directory failed: HTTP " + response.status
+      );
+    }
+
+    const data = await response.json();
+
+    allDropzones = Array.isArray(data.dropzones)
+      ? data.dropzones
+      : [];
+
+    dzMetaEl.textContent =
+      `${data.count || allDropzones.length} current North American USPA-affiliated locations`;
+
+    renderDropzoneOptions();
+
+    await loadWeather();
+
+  } catch (error) {
+    console.error(error);
+
+    dzEl.innerHTML = `
+      <option value="">Could not load drop zone directory</option>
+    `;
+
+    dzMetaEl.textContent =
+      "The USPA directory could not be loaded. Please refresh the page.";
+  }
+}
+
+dzEl.addEventListener("change", () => {
+  updateSelectedDropzone();
+  loadWeather();
+});
+
+dzSearchEl.addEventListener("input", () => {
+  renderDropzoneOptions(dzSearchEl.value);
+});
+
+favoriteButtonEl.addEventListener("click", toggleFavorite);
+
+removeFavoriteButtonEl.addEventListener("click", () => {
+  if (!selectedDropzone || !isFavorite(selectedDropzone.id)) return;
+  favoriteDropzoneIds = favoriteDropzoneIds.filter(
+    id => id !== selectedDropzone.id
+  );
+  saveFavorites();
+  renderFavorites();
+  favoritesEl.value = "";
+  updateFavoriteButton();
+});
+
+favoritesEl.addEventListener("change", () => {
+  const id = favoritesEl.value;
+  if (!id) return;
+
+  const favorite = allDropzones.find(dz => dz.id === id);
+  if (!favorite) return;
+
+  dzEl.value = favorite.id;
+  updateSelectedDropzone();
+  dzSearchEl.value = "";
+  renderDropzoneOptions("");
+  dzEl.value = favorite.id;
+  updateSelectedDropzone();
+});
+
+renderFavorites();
+
+altEl.addEventListener("change", () => {
+  updateAltitude();
+  loadWeather();
+});
+
+altEl.addEventListener("input", updateAltitude);
+
+loadDropzones();
+</script>
+</body>
+</html>
