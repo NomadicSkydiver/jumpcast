@@ -1,20 +1,28 @@
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07111f">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
+
+<meta
+  name="theme-color"
+  content="#07111f"
+>
 
 <title>JumpCast</title>
 
 <style>
+
 :root{
   --bg:#07111f;
   --card:#0d1b2d;
   --card2:#0a1728;
-  --muted:#91a4ba;
   --text:#f5f8fc;
+  --muted:#91a4ba;
   --accent:#65d6ff;
   --good:#65e6a2;
   --warn:#ffd166;
@@ -26,10 +34,19 @@
   box-sizing:border-box;
 }
 
+html{
+  background:var(--bg);
+}
+
 body{
   margin:0;
   background:
-    linear-gradient(160deg,#07111f,#0a1728 55%,#07111f);
+    linear-gradient(
+      160deg,
+      #07111f,
+      #0a1728 55%,
+      #07111f
+    );
   color:var(--text);
   font-family:
     system-ui,
@@ -40,10 +57,11 @@ body{
 }
 
 .app{
+  width:100%;
   max-width:560px;
-  margin:auto;
   min-height:100vh;
-  padding:18px 16px 34px;
+  margin:auto;
+  padding:18px 16px 35px;
 }
 
 .top{
@@ -51,12 +69,14 @@ body{
   justify-content:space-between;
   align-items:center;
   gap:12px;
+  margin-bottom:12px;
 }
 
 .brand{
-  font-weight:950;
   font-size:29px;
-  letter-spacing:-.7px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-1px;
 }
 
 .brand span{
@@ -64,671 +84,157 @@ body{
 }
 
 .tag{
-  font-size:11px;
+  margin-top:5px;
   color:var(--muted);
-  margin-top:3px;
+  font-size:11px;
+}
+
+.refresh{
+  width:70px;
+  height:70px;
+  border:0;
+  border-radius:20px;
+  background:#10243a;
+  color:white;
+  font-size:28px;
 }
 
 .card{
-  background:#0d1b2df2;
+  margin:12px 0;
+  padding:17px;
   border:1px solid var(--line);
   border-radius:20px;
-  padding:17px;
-  margin:12px 0;
+  background:#0d1b2df2;
 }
 
 .label{
-  font-size:11px;
   color:var(--muted);
-  text-transform:uppercase;
+  font-size:11px;
+  font-weight:900;
   letter-spacing:1px;
-  font-weight:850;
+  text-transform:uppercase;
 }
 
-.selectrow{
-  display:flex;
-  gap:9px;
-  margin-top:9px;
+.controls{
+  display:grid;
+  grid-template-columns:1.1fr 1fr;
+  gap:10px;
+  margin-top:10px;
 }
 
-.selectrow select,
-.selectrow input{
-  flex:1;
+select,
+input{
+  width:100%;
   min-width:0;
+  padding:14px 12px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  outline:none;
   background:#14263c;
   color:white;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:13px 12px;
-  font-size:15px;
+  font-size:16px;
 }
 
-.altbox{
-  margin-top:10px;
-  background:var(--card2);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px;
-}
-
-.altmain{
+.altInfo{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  gap:10px;
+  gap:12px;
+  margin-top:11px;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--card2);
 }
 
-.altvalue{
-  font-size:25px;
+.altNumber{
+  margin-top:4px;
+  font-size:23px;
   font-weight:950;
 }
 
-.altvalue span{
-  font-size:12px;
+.altUnit{
   color:var(--muted);
-  font-weight:700;
+  font-size:11px;
+  font-weight:800;
 }
 
 .hero{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
-  gap:12px;
+  gap:15px;
 }
 
 .heroTitle{
-  font-size:22px;
+  margin-top:5px;
+  font-size:21px;
   font-weight:950;
-  margin-top:4px;
 }
 
 .heroSub{
+  margin-top:5px;
   color:var(--muted);
   font-size:12px;
-  margin-top:4px;
+  line-height:1.5;
 }
 
-.windHero{
+.wind{
+  min-width:120px;
   text-align:right;
-  min-width:115px;
 }
 
-.windSpeed{
-  font-size:40px;
-  line-height:1;
+.windNumber{
+  font-size:42px;
+  line-height:.95;
   font-weight:950;
 }
 
 .windUnit{
-  color:var(--muted);
-  font-size:12px;
-  font-weight:800;
-}
-
-.windDir{
-  color:var(--accent);
-  font-size:17px;
-  font-weight:900;
-  margin-top:5px;
-}
-
-.windDeg{
+  margin-top:4px;
   color:var(--muted);
   font-size:11px;
+  font-weight:850;
 }
 
-.sectionTitle{
-  font-size:16px;
-  font-weight:900;
-  margin-bottom:3px;
+.windDirection{
+  margin-top:6px;
+  color:var(--accent);
+  font-size:18px;
+  font-weight:950;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:14px;
-}
-
-.metric{
-  background:var(--card2);
-  border-radius:14px;
-  padding:13px;
-}
-
-.metric b{
-  display:block;
-  font-size:20px;
-  margin-top:4px;
-}
-
-.metric small{
+.windDegrees{
   color:var(--muted);
   font-size:11px;
 }
 
 .profile{
-  margin-top:12px;
-  background:var(--card2);
+  margin-top:14px;
+  padding:14px;
   border:1px solid var(--line);
   border-radius:15px;
-  padding:14px;
+  background:var(--card2);
 }
 
-.profileMain{
+.profileTop{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
 }
 
-.profileWind{
+.profileSpeed{
+  margin-top:3px;
   font-size:27px;
   font-weight:950;
 }
 
-.profileDir{
+.profileDirection{
   color:var(--accent);
-  font-weight:850;
-}
-
-.profileNote{
-  margin-top:8px;
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.5;
-}
-
-.hours{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  padding-bottom:3px;
-}
-
-.hour{
-  min-width:94px;
-  background:var(--card2);
-  border-radius:14px;
-  padding:11px 9px;
-  text-align:center;
-}
-
-.hourTime{
-  color:var(--muted);
-  font-size:11px;
-}
-
-.hour b{
-  display:block;
-  font-size:18px;
-  margin:7px 0 2px;
-}
-
-.hourDir{
-  color:var(--accent);
-  font-size:11px;
-  font-weight:850;
-}
-
-.hour small{
-  color:var(--muted);
-  font-size:10px;
-}
-
-.report{
-  background:var(--card2);
-  border-radius:13px;
-  padding:12px;
-  margin-top:9px;
+  font-weight:900;
 }
 
 .note{
-  font-size:11px;
-  line-height:1.55;
-  color:var(--muted);
-}
-
-.source{
-  font-size:10px;
-  color:var(--muted);
-  margin-top:9px;
-}
-
-.badge{
-  display:inline-block;
-  padding:5px 8px;
-  border-radius:8px;
-  background:#14263c;
-  color:var(--accent);
-  font-size:10px;
-  font-weight:850;
-  letter-spacing:.5px;
-}
-
-.button{
-  border:0;
-  border-radius:12px;
-  background:#14263c;
-  color:white;
-  padding:10px 13px;
-  font-size:18px;
-  font-weight:800;
-}
-
-.loading{
-  color:var(--muted);
-  padding:20px 0;
-}
-
-.error{
-  color:var(--bad);
-  font-size:13px;
-  line-height:1.5;
-}
-
-.nav{
-  position:sticky;
-  bottom:10px;
-  display:flex;
-  justify-content:space-around;
-  background:#0b192aeb;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:9px 5px;
-  backdrop-filter:blur(12px);
-}
-
-.nav button{
-  background:transparent;
-  border:0;
-  color:var(--muted);
-  font-weight:800;
-  font-size:11px;
-}
-
-.nav .active{
-  color:var(--accent);
-}
-
-footer{
-  text-align:center;
-  padding:12px 6px 0;
   color:var(--muted);
   font-size:11px;
-  line-height:1.5;
-}
-
-@media(max-width:380px){
-  .hero{
-    display:block;
-  }
-
-  .windHero{
-    text-align:left;
-    margin-top:15px;
-  }
-
-  .selectrow{
-    flex-direction:column;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="app">
-
-  <!-- HEADER -->
-  <div class="top">
-    <div>
-      <div class="brand">🪂 Jump<span>Cast</span></div>
-      <div class="tag">
-        Skydiving weather, built for jumpers
-      </div>
-    </div>
-
-    <button class="button" onclick="load()">
-      ↻
-    </button>
-  </div>
-
-
-  <!-- LOCATION / ALTITUDE -->
-  <div class="card">
-
-    <div class="label">
-      Drop zone
-    </div>
-
-    <div class="selectrow">
-
-      <select id="dz">
-      </select>
-
-      <input
-        id="alt"
-        type="number"
-        value="12500"
-        min="1000"
-        max="20000"
-        step="500"
-        aria-label="Jump altitude"
-      >
-
-    </div>
-
-    <div class="tag" style="margin-top:8px">
-      Jump altitude is entered as feet MSL
-    </div>
-
-    <div class="altbox">
-
-      <div class="altmain">
-
-        <div>
-          <div class="label">
-            Your jump altitude
-          </div>
-
-          <div class="altvalue">
-            <span id="altDisplay">12,500</span>
-            <span>FT MSL</span>
-          </div>
-        </div>
-
-        <div style="text-align:right">
-          <div class="label">
-            Above DZ
-          </div>
-
-          <div class="altvalue">
-            <span id="aglDisplay">—</span>
-            <span>FT AGL</span>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- WEATHER -->
-  <div id="main">
-
-    <div class="card loading">
-      Loading live conditions…
-    </div>
-
-  </div>
-
-
-  <!-- COMMUNITY -->
-  <div class="card">
-
-    <div class="label">
-      Community reports
-    </div>
-
-    <div class="report">
-
-      <div class="badge">
-        COMING NEXT
-      </div>
-
-      <div class="note" style="margin-top:8px">
-        Moderated reports from jumpers at the DZ,
-        including surface wind, clouds, rain and
-        whether jumping is currently taking place.
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- SAFETY -->
-  <div class="card">
-
-    <div class="label">
-      Safety / data note
-    </div>
-
-    <div class="note" style="margin-top:8px">
-
-      JumpCast presents weather information and
-      model-derived wind estimates. It does not
-      authorize a jump or replace the DZ's operating
-      decision, pilot or instructor judgment,
-      applicable regulations, or current local
-      observations.
-
-    </div>
-
-    <div class="source">
-      Forecast: Open-Meteo • Aviation observation:
-      NOAA Aviation Weather Center
-    </div>
-
-  </div>
-
-
-  <!-- NAV -->
-  <div class="nav">
-
-    <button class="active">
-      🏠 Home
-    </button>
-
-    <button>
-      📍 DZs
-    </button>
-
-    <button>
-      📈 Forecast
-    </button>
-
-    <button>
-      ⚙️ Profile
-    </button>
-
-  </div>
-
-
-  <footer>
-    App created by Timothy Howell<br>
-    Website created by Timothy Howell
-  </footer>
-
-</div>
-
-
-<script>
-
-let dzData = {};
-
-const $ = id =>
-  document.getElementById(id);
-
-
-/* -------------------------
-   Basic formatting
-------------------------- */
-
-function fmt(value){
-  if(value == null || !Number.isFinite(Number(value))){
-    return "—";
-  }
-
-  return Math.round(Number(value));
-}
-
-
-function fmtOne(value){
-  if(value == null || !Number.isFinite(Number(value))){
-    return "—";
-  }
-
-  return Number(value).toFixed(1);
-}
-
-
-function comma(value){
-  if(value == null || !Number.isFinite(Number(value))){
-    return "—";
-  }
-
-  return Math.round(Number(value)).toLocaleString();
-}
-
-
-/* -------------------------
-   Wind direction
-------------------------- */
-
-function windLabel(direction){
-
-  if(
-    direction == null ||
-    !Number.isFinite(Number(direction))
-  ){
-    return "—";
-  }
-
-  const directions = [
-    "N",
-    "NE",
-    "E",
-    "SE",
-    "S",
-    "SW",
-    "W",
-    "NW"
-  ];
-
-  return directions[
-    Math.round(Number(direction) / 45) % 8
-  ];
-}
-
-
-/* -------------------------
-   Time formatting
-------------------------- */
-
-function timeLabel(time){
-
-  const d = new Date(time);
-
-  return d.toLocaleTimeString(
-    [],
-    {
-      hour:"numeric",
-      minute:"2-digit"
-    }
-  );
-}
-
-
-/* -------------------------
-   Find current hour
-------------------------- */
-
-function closestHour(times){
-
-  const now = new Date();
-
-  let index = 0;
-  let best = Infinity;
-
-  times.forEach((time,i)=>{
-
-    const difference =
-      Math.abs(
-        new Date(time).getTime()
-        - now.getTime()
-      );
-
-    if(difference < best){
-
-      best = difference;
-      index = i;
-
-    }
-
-  });
-
-  return index;
-}
-
-
-/* -------------------------
-   Render dashboard
-------------------------- */
-
-function render(d){
-
-  const h = d.forecast.hourly;
-
-  const i = closestHour(h.time);
-
-  const dz = d.dropzone;
-
-  const altitude =
-    d.jumpAltitude?.msl_ft ??
-    Number($("alt").value) ??
-    12500;
-
-  const agl =
-    d.jumpAltitude?.agl_ft ??
-    Math.max(
-      0,
-      altitude - Number(dz.elevation_ft || 0)
-    );
-
-
-  /*
-    Update altitude display.
-  */
-
-  $("altDisplay").textContent =
-    comma(altitude);
-
-  $("aglDisplay").textContent =
-    comma(agl);
-
-
-  /*
-    Surface weather.
-  */
-
-  const surfaceWind =
-    h.wind_speed_10m?.[i];
-
-  const surfaceDirection =
-    h.wind_direction_10m?.[i];
-
-  const gust =
-    h.wind_gusts_10m?.[i];
-
-  const cloud =
-    h.cloud_cover?.[i];
-
-  const visibility =
-    h.visibility?.[i];
-
-  const rain =
-    h.precipitation_probability?.[i];
-
-  const temperature =
-    h.temperature_2m?.[i];
-
-
-  /*
-    Altitude-specific wind.
-
-    This comes from the NEW server calculation.
- 
+  line
