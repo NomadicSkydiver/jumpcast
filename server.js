@@ -611,6 +611,11 @@ app.get("/icon.svg",(req,res)=>{
     path.join(__dirname,"icon.svg")
   );
 });
+app.get("/profile.js",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"profile.js")
+  );
+});
 
 app.get("/jumpcast-icon-192.png",(req,res)=>{
   res.sendFile(
