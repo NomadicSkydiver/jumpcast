@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-
+const VERIFIED_LOCATIONS = require("./verified-locations");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -12,13 +12,6 @@ const USPA_TIMEOUT_MS = 12000;
 const PRESSURE_LEVELS = [
   1000,975,950,925,900,875,850,825,800,775,750,725,
   700,675,650,625,600,575,550,525,500,475,450
-]; const VERIFIED_LOCATION_OVERRIDES = {
-  "Midwest Freefall Sport Parachute Club, Inc.": {
-    address: "62912 Kunstman Road, Ray, MI 48096",
-    lat: 42.75956,
-    lon: -82.94168
-  }
-};
 
 const FALLBACK_DZ = {
   "fallback-midwest": {
@@ -115,7 +108,7 @@ function normalizeUspaDropzone(raw){
   if(SKIP_USPA_IDS.has(String(raw.Id)))return null;
 
   const name=String(raw.AccountName||"").trim();
-const verified=VERIFIED_LOCATION_OVERRIDES[name] || {};
+const verified=VERIFIED_LOCATIONS[name] || {};
 
 const lat=Number(
   verified.lat ?? raw.Latitude
