@@ -7,6 +7,7 @@
   <title>JumpCast</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -14,22 +15,26 @@
       color: #f5f7fb;
       font-family: Arial, Helvetica, sans-serif;
     }
+
     .app {
       width: 100%;
       max-width: 620px;
       margin: auto;
       padding: 24px 18px 50px;
     }
+
     .logo {
       font-size: 36px;
       font-weight: 800;
       margin: 8px 0 4px;
     }
+
     .tagline {
       color: #9eabbc;
       font-size: 15px;
       margin-bottom: 24px;
     }
+
     .card {
       background: #101c2d;
       border: 1px solid #263850;
@@ -37,17 +42,21 @@
       padding: 18px;
       margin-bottom: 16px;
     }
+
     h2 {
       font-size: 19px;
       margin: 0 0 15px;
     }
+
     label {
       display: block;
       color: #aeb9c8;
       font-size: 13px;
       margin-bottom: 7px;
     }
-    select, input {
+
+    select,
+    input {
       width: 100%;
       border: 1px solid #344963;
       border-radius: 12px;
@@ -57,21 +66,43 @@
       font-size: 16px;
       outline: none;
     }
-    select:focus, input:focus { border-color: #6d8fb8; }
-    .search { margin-bottom: 10px; }
+
+    select:focus,
+    input:focus {
+      border-color: #6d8fb8;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .settings-item label {
+      margin-bottom: 6px;
+    }
+
+    .search {
+      margin-bottom: 10px;
+    }
+
     .dz-meta {
       color: #8f9eb1;
       font-size: 12px;
       line-height: 1.5;
       margin-top: 9px;
     }
+
     .favorite-row {
       display: flex;
       gap: 10px;
       margin-top: 12px;
     }
+
     .favorite-button,
-    .remove-favorite-button {
+    .remove-favorite-button,
+    .nearby-button,
+    .nearby-use {
       border: 1px solid #344963;
       border-radius: 12px;
       background: #091526;
@@ -81,15 +112,19 @@
       font-weight: 700;
       cursor: pointer;
     }
+
     .favorite-button {
       flex: 1;
     }
+
     .favorite-button.active {
       border-color: #6d8fb8;
     }
+
     .remove-favorite-button {
       display: none;
     }
+
     .favorite-status {
       color: #8f9eb1;
       font-size: 12px;
@@ -98,30 +133,28 @@
 
     .nearby-button {
       width: 100%;
-      border: 1px solid #344963;
-      border-radius: 12px;
-      background: #091526;
-      color: #fff;
       padding: 14px;
       font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
     }
+
     .nearby-button:disabled {
       opacity: .65;
       cursor: wait;
     }
+
     .nearby-status {
       color: #aeb9c8;
       font-size: 13px;
       line-height: 1.5;
       margin-top: 10px;
     }
+
     .nearby-list {
       display: grid;
       gap: 10px;
       margin-top: 12px;
     }
+
     .nearby-item {
       display: flex;
       align-items: center;
@@ -132,15 +165,18 @@
       padding: 12px;
       background: #0b1728;
     }
+
     .nearby-name {
       font-weight: 700;
       line-height: 1.25;
     }
+
     .nearby-location {
       color: #9fb1c8;
       font-size: 12px;
       margin-top: 4px;
     }
+
     .nearby-distance {
       color: #a9d6b1;
       font-size: 13px;
@@ -149,16 +185,14 @@
       margin-bottom: 7px;
       text-align: right;
     }
+
     .nearby-use {
-      border: 1px solid #344963;
-      border-radius: 10px;
-      background: #101f34;
-      color: #fff;
       padding: 9px 12px;
       font-size: 13px;
-      font-weight: 700;
       white-space: nowrap;
+      background: #101f34;
     }
+
     .alt-info {
       display: flex;
       justify-content: space-between;
@@ -167,42 +201,50 @@
       color: #9eabbc;
       font-size: 13px;
     }
+
     .big-wind {
       font-size: 38px;
       font-weight: 800;
       margin: 5px 0;
     }
+
     .wind-direction {
       color: #aeb9c8;
       font-size: 15px;
       margin-bottom: 15px;
     }
+
     .weather-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+
     .metric {
       background: #0a1627;
       border: 1px solid #22364f;
       border-radius: 13px;
       padding: 13px;
     }
+
     .metric-title {
       color: #8f9eb1;
       font-size: 12px;
       margin-bottom: 5px;
     }
+
     .metric-value {
       font-size: 17px;
       font-weight: 700;
       overflow-wrap: anywhere;
     }
+
     .hours {
       display: flex;
       flex-direction: column;
       gap: 9px;
     }
+
     .hour {
       display: flex;
       justify-content: space-between;
@@ -213,49 +255,106 @@
       background: #0a1627;
       border: 1px solid #22364f;
     }
+
     .hour-time {
       min-width: 58px;
       font-weight: 700;
     }
+
     .hour-wind {
       text-align: right;
       font-weight: 700;
     }
+
     .hour-sub {
       color: #8f9eb1;
       font-size: 12px;
       margin-top: 3px;
     }
+
     .muted {
       color: #9eabbc;
       line-height: 1.55;
       font-size: 14px;
     }
+
     .source {
       color: #738399;
       font-size: 11px;
       line-height: 1.5;
       margin-top: 14px;
     }
+
     .footer {
       text-align: center;
       color: #66758a;
       font-size: 12px;
       margin-top: 25px;
     }
+
     .loading { color: #aeb9c8; }
     .error { color: #ff9d9d; line-height: 1.5; }
     .success { color: #a9d6b1; }
+
     @media (max-width: 400px) {
-      .weather-grid { grid-template-columns: 1fr; }
-      .big-wind { font-size: 34px; }
+      .weather-grid,
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .big-wind {
+        font-size: 34px;
+      }
     }
   </style>
 </head>
+
 <body>
 <main class="app">
+
   <div class="logo">JumpCast</div>
   <div class="tagline">Skydiving weather information at a glance.</div>
+
+  <section class="card">
+    <h2>Display Settings</h2>
+
+    <div class="settings-grid">
+
+      <div class="settings-item">
+        <label for="windUnit">Wind Speed</label>
+        <select id="windUnit">
+          <option value="kt">Knots (KT)</option>
+          <option value="mph">MPH</option>
+          <option value="kph">KPH</option>
+        </select>
+      </div>
+
+      <div class="settings-item">
+        <label for="tempUnit">Temperature</label>
+        <select id="tempUnit">
+          <option value="f">°F</option>
+          <option value="c">°C</option>
+        </select>
+      </div>
+
+      <div class="settings-item">
+        <label for="visibilityUnit">Visibility</label>
+        <select id="visibilityUnit">
+          <option value="mi">Miles</option>
+          <option value="km">Kilometers</option>
+        </select>
+      </div>
+
+      <div class="settings-item">
+        <label for="timeFormat">Time Format</label>
+        <select id="timeFormat">
+          <option value="12">12-hour</option>
+          <option value="24">24-hour</option>
+        </select>
+      </div>
+
+    </div>
+  </section>
 
   <section class="card">
     <h2>Drop Zone</h2>
@@ -278,17 +377,23 @@
         ☆ Add to Favorites
       </button>
     </div>
+
     <div id="favoriteStatus" class="favorite-status"></div>
   </section>
 
   <section class="card">
     <h2>Favorites</h2>
+
     <label for="favorites">Your favorite drop zones</label>
+
     <select id="favorites">
       <option value="">No favorites yet</option>
     </select>
+
     <div class="favorite-row">
-      <button id="removeFavoriteButton" class="remove-favorite-button" type="button">
+      <button id="removeFavoriteButton"
+        class="remove-favorite-button"
+        type="button">
         Remove Favorite
       </button>
     </div>
@@ -296,12 +401,17 @@
 
   <section class="card">
     <h2>Nearby Drop Zones</h2>
+
     <p class="muted">
       Find USPA-affiliated drop zones near your current location.
     </p>
-    <button id="nearbyButton" class="nearby-button" type="button">
+
+    <button id="nearbyButton"
+      class="nearby-button"
+      type="button">
       📍 Find Drop Zones Near Me
     </button>
+
     <div id="nearbyStatus" class="nearby-status"></div>
     <div id="nearbyList" class="nearby-list"></div>
   </section>
@@ -310,17 +420,30 @@
     <h2>Jump Altitude</h2>
 
     <label for="alt">Altitude MSL (feet)</label>
-    <input id="alt" type="number" value="12500"
-      min="1000" max="20000" step="500">
+
+    <input id="alt"
+      type="number"
+      value="12500"
+      min="1000"
+      max="20000"
+      step="500">
 
     <div class="alt-info">
-      <span>MSL: <strong id="msl">12,500 ft</strong></span>
-      <span>AGL: <strong id="agl">—</strong></span>
+      <span>
+        MSL:
+        <strong id="msl">12,500 ft</strong>
+      </span>
+
+      <span>
+        AGL:
+        <strong id="agl">—</strong>
+      </span>
     </div>
   </section>
 
   <section class="card">
     <h2>Wind at Jump Altitude</h2>
+
     <div id="jumpWind">
       <div class="loading">Loading live conditions...</div>
     </div>
@@ -328,6 +451,7 @@
 
   <section class="card">
     <h2>Current Conditions</h2>
+
     <div id="current">
       <div class="loading">Loading current conditions...</div>
     </div>
@@ -335,6 +459,7 @@
 
   <section class="card">
     <h2>Next 12 Hours</h2>
+
     <div id="hours">
       <div class="loading">Loading hourly forecast...</div>
     </div>
@@ -342,6 +467,7 @@
 
   <section class="card">
     <h2>Altitude Calculation</h2>
+
     <p id="altitudeNote" class="muted">
       Wind is being calculated for your selected MSL altitude.
     </p>
@@ -349,6 +475,7 @@
 
   <section class="card">
     <h2>Aviation Observation</h2>
+
     <div id="metar">
       <div class="loading">Loading aviation observation...</div>
     </div>
@@ -356,6 +483,7 @@
 
   <section class="card">
     <h2>Community Reports</h2>
+
     <p class="muted">
       Community reports will appear here in a future update.
     </p>
@@ -363,6 +491,7 @@
 
   <section class="card">
     <h2>Safety &amp; Data Note</h2>
+
     <p class="muted">
       JumpCast provides weather information and model-derived wind
       estimates. It does not authorize a jump or replace the DZ's
@@ -374,33 +503,312 @@
   <div class="footer">
     Mobile app &amp; website created by Timothy Howell
   </div>
+
 </main>
 
 <script>
 const dzEl = document.getElementById("dz");
 const dzSearchEl = document.getElementById("dzSearch");
 const dzMetaEl = document.getElementById("dzMeta");
-const favoriteButtonEl = document.getElementById("favoriteButton");
-const favoriteStatusEl = document.getElementById("favoriteStatus");
-const favoritesEl = document.getElementById("favorites");
-const removeFavoriteButtonEl = document.getElementById("removeFavoriteButton");
-const nearbyButtonEl = document.getElementById("nearbyButton");
-const nearbyStatusEl = document.getElementById("nearbyStatus");
-const nearbyListEl = document.getElementById("nearbyList");
-const altEl = document.getElementById("alt");
-const mslEl = document.getElementById("msl");
-const aglEl = document.getElementById("agl");
-const jumpWindEl = document.getElementById("jumpWind");
-const currentEl = document.getElementById("current");
-const hoursEl = document.getElementById("hours");
-const altitudeNoteEl = document.getElementById("altitudeNote");
-const metarEl = document.getElementById("metar");
+
+const favoriteButtonEl =
+  document.getElementById("favoriteButton");
+
+const favoriteStatusEl =
+  document.getElementById("favoriteStatus");
+
+const favoritesEl =
+  document.getElementById("favorites");
+
+const removeFavoriteButtonEl =
+  document.getElementById("removeFavoriteButton");
+
+const nearbyButtonEl =
+  document.getElementById("nearbyButton");
+
+const nearbyStatusEl =
+  document.getElementById("nearbyStatus");
+
+const nearbyListEl =
+  document.getElementById("nearbyList");
+
+const altEl =
+  document.getElementById("alt");
+
+const mslEl =
+  document.getElementById("msl");
+
+const aglEl =
+  document.getElementById("agl");
+
+const jumpWindEl =
+  document.getElementById("jumpWind");
+
+const currentEl =
+  document.getElementById("current");
+
+const hoursEl =
+  document.getElementById("hours");
+
+const altitudeNoteEl =
+  document.getElementById("altitudeNote");
+
+const metarEl =
+  document.getElementById("metar");
+
+const windUnitEl =
+  document.getElementById("windUnit");
+
+const tempUnitEl =
+  document.getElementById("tempUnit");
+
+const visibilityUnitEl =
+  document.getElementById("visibilityUnit");
+
+const timeFormatEl =
+  document.getElementById("timeFormat");
+
+const SETTINGS_KEY =
+  "jumpcastDisplaySettings";
+
+const DEFAULT_SETTINGS = {
+  wind: "kt",
+  temp: "f",
+  visibility: "mi",
+  time: "12"
+};
+
+let displaySettings = loadDisplaySettings();
 
 let allDropzones = [];
 let selectedDropzone = null;
-let favoriteDropzoneIds = JSON.parse(
-  localStorage.getItem("jumpcastFavorites") || "[]"
-);
+let lastWeatherData = null;
+
+let favoriteDropzoneIds = [];
+
+try {
+  const saved =
+    JSON.parse(
+      localStorage.getItem("jumpcastFavorites") || "[]"
+    );
+
+  favoriteDropzoneIds =
+    Array.isArray(saved) ? saved : [];
+} catch {
+  favoriteDropzoneIds = [];
+}
+
+function loadDisplaySettings() {
+  try {
+    const saved =
+      JSON.parse(
+        localStorage.getItem(SETTINGS_KEY) || "{}"
+      );
+
+    return {
+      ...DEFAULT_SETTINGS,
+      ...(saved || {})
+    };
+  } catch {
+    return { ...DEFAULT_SETTINGS };
+  }
+}
+
+function saveDisplaySettings() {
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify(displaySettings)
+  );
+}
+
+function applySettingsToControls() {
+  windUnitEl.value = displaySettings.wind;
+  tempUnitEl.value = displaySettings.temp;
+  visibilityUnitEl.value = displaySettings.visibility;
+  timeFormatEl.value = displaySettings.time;
+}
+
+function windText(kt, decimals = 1) {
+  const n = Number(kt);
+
+  if (!Number.isFinite(n)) return "—";
+
+  if (displaySettings.wind === "mph") {
+    return `${(n * 1.150779).toFixed(decimals)} mph`;
+  }
+
+  if (displaySettings.wind === "kph") {
+    return `${(n * 1.852).toFixed(decimals)} km/h`;
+  }
+
+  return `${n.toFixed(decimals)} kt`;
+}
+
+function temperatureText(f) {
+  const n = Number(f);
+
+  if (!Number.isFinite(n)) return "—";
+
+  if (displaySettings.temp === "c") {
+    return `${((n - 32) * 5 / 9).toFixed(1)}°C`;
+  }
+
+  return `${n.toFixed(1)}°F`;
+}
+
+/*
+  JumpCast's server requests Open-Meteo visibility in kilometers.
+  Keep that underlying value in km and convert only for display.
+*/
+function visibilityText(km) {
+  const n = Number(km);
+
+  if (!Number.isFinite(n)) return "—";
+
+  if (displaySettings.visibility === "km") {
+    return `${n.toFixed(1)} km`;
+  }
+
+  return `${(n * 0.621371).toFixed(1)} mi`;
+}
+
+function formatNumber(value, decimals = 0) {
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) return "—";
+
+  return n.toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+}
+
+function directionName(degrees) {
+  const n = Number(degrees);
+
+  if (!Number.isFinite(n)) return "—";
+
+  const dirs = [
+    "N", "NNE", "NE", "ENE",
+    "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW",
+    "W", "WNW", "NW", "NNW"
+  ];
+
+  return dirs[
+    Math.round(n / 22.5) % 16
+  ];
+}
+
+/*
+  Open-Meteo is requested with timezone=auto, so its time
+  strings represent the drop zone's local wall-clock time.
+  We intentionally do not pass them through new Date(), because
+  that could convert them into the phone's timezone.
+*/
+function formatLocalTime(time) {
+  if (!time) return "—";
+
+  const match =
+    String(time).match(
+      /^\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2})/
+    );
+
+  if (!match) return String(time);
+
+  let hour = Number(match[1]);
+  const minute = match[2];
+
+  if (displaySettings.time === "24") {
+    return `${String(hour).padStart(2, "0")}:${minute}`;
+  }
+
+  const suffix = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+
+  return `${hour}:${minute} ${suffix}`;
+}
+
+function wallClockKeyInTimeZone(timeZone) {
+  try {
+    const parts =
+      new Intl.DateTimeFormat("en-CA", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23"
+      }).formatToParts(new Date());
+
+    const values = {};
+
+    parts.forEach(part => {
+      if (part.type !== "literal") {
+        values[part.type] = part.value;
+      }
+    });
+
+    return (
+      `${values.year}-${values.month}-${values.day}` +
+      `T${values.hour}:${values.minute}`
+    );
+  } catch {
+    const now = new Date();
+
+    return (
+      `${now.getFullYear()}-` +
+      `${String(now.getMonth() + 1).padStart(2, "0")}-` +
+      `${String(now.getDate()).padStart(2, "0")}` +
+      `T${String(now.getHours()).padStart(2, "0")}:` +
+      `${String(now.getMinutes()).padStart(2, "0")}`
+    );
+  }
+}
+
+function findCurrentForecastIndex(times, timeZone) {
+  if (!Array.isArray(times) || !times.length) {
+    return 0;
+  }
+
+  const nowKey =
+    wallClockKeyInTimeZone(timeZone || "UTC");
+
+  let bestIndex = 0;
+  let bestDifference = Infinity;
+
+  times.forEach((time, index) => {
+    const difference =
+      Math.abs(
+        String(time).slice(0, 16).localeCompare(
+          nowKey.slice(0, 16)
+        )
+      );
+
+    const a =
+      String(time).slice(0, 16);
+
+    const b =
+      nowKey.slice(0, 16);
+
+    const numericDifference =
+      Math.abs(
+        Date.parse(a + ":00") -
+        Date.parse(b + ":00")
+      );
+
+    if (
+      Number.isFinite(numericDifference) &&
+      numericDifference < bestDifference
+    ) {
+      bestDifference = numericDifference;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex;
+}
 
 function saveFavorites() {
   localStorage.setItem(
@@ -413,65 +821,96 @@ function isFavorite(id) {
   return favoriteDropzoneIds.includes(id);
 }
 
+function updateFavoriteButton() {
+  if (!selectedDropzone) {
+    favoriteButtonEl.textContent =
+      "☆ Add to Favorites";
+
+    favoriteButtonEl.classList.remove("active");
+    favoriteStatusEl.textContent = "";
+
+    removeFavoriteButtonEl.style.display = "none";
+    return;
+  }
+
+  if (isFavorite(selectedDropzone.id)) {
+    favoriteButtonEl.textContent =
+      "★ Remove from Favorites";
+
+    favoriteButtonEl.classList.add("active");
+
+    favoriteStatusEl.textContent =
+      "Saved to your favorites on this device.";
+
+    removeFavoriteButtonEl.style.display = "block";
+  } else {
+    favoriteButtonEl.textContent =
+      "☆ Add to Favorites";
+
+    favoriteButtonEl.classList.remove("active");
+    favoriteStatusEl.textContent = "";
+
+    removeFavoriteButtonEl.style.display = "none";
+  }
+}
+
 function renderFavorites() {
-  const validIds = new Set(allDropzones.map(dz => dz.id));
-  favoriteDropzoneIds = favoriteDropzoneIds.filter(id => validIds.has(id));
+  const validIds =
+    new Set(allDropzones.map(dz => dz.id));
+
+  favoriteDropzoneIds =
+    favoriteDropzoneIds.filter(
+      id => validIds.has(id)
+    );
+
   saveFavorites();
 
   favoritesEl.innerHTML = "";
 
   if (!favoriteDropzoneIds.length) {
-    const option = document.createElement("option");
+    const option =
+      document.createElement("option");
+
     option.value = "";
     option.textContent = "No favorites yet";
+
     favoritesEl.appendChild(option);
-    removeFavoriteButtonEl.style.display = "none";
+
+    removeFavoriteButtonEl.style.display =
+      "none";
+
     updateFavoriteButton();
     return;
   }
 
-  const placeholder = document.createElement("option");
+  const placeholder =
+    document.createElement("option");
+
   placeholder.value = "";
-  placeholder.textContent = "Select a favorite...";
+  placeholder.textContent =
+    "Select a favorite...";
+
   favoritesEl.appendChild(placeholder);
 
   favoriteDropzoneIds
-    .map(id => allDropzones.find(dz => dz.id === id))
+    .map(id =>
+      allDropzones.find(dz => dz.id === id)
+    )
     .filter(Boolean)
     .forEach(dz => {
-      const option = document.createElement("option");
+      const option =
+        document.createElement("option");
+
       option.value = dz.id;
-      option.textContent = dz.name + (dz.city ? " — " + dz.city : "");
+
+      option.textContent =
+        dz.name +
+        (dz.city ? " — " + dz.city : "");
+
       favoritesEl.appendChild(option);
     });
 
-  removeFavoriteButtonEl.style.display =
-    selectedDropzone && isFavorite(selectedDropzone.id)
-      ? "block"
-      : "none";
-
   updateFavoriteButton();
-}
-
-function updateFavoriteButton() {
-  if (!selectedDropzone) {
-    favoriteButtonEl.textContent = "☆ Add to Favorites";
-    favoriteButtonEl.classList.remove("active");
-    favoriteStatusEl.textContent = "";
-    return;
-  }
-
-  if (isFavorite(selectedDropzone.id)) {
-    favoriteButtonEl.textContent = "★ Remove from Favorites";
-    favoriteButtonEl.classList.add("active");
-    favoriteStatusEl.textContent = "Saved to your favorites on this device.";
-    removeFavoriteButtonEl.style.display = "block";
-  } else {
-    favoriteButtonEl.textContent = "☆ Add to Favorites";
-    favoriteButtonEl.classList.remove("active");
-    favoriteStatusEl.textContent = "";
-    removeFavoriteButtonEl.style.display = "none";
-  }
 }
 
 function toggleFavorite() {
@@ -480,7 +919,10 @@ function toggleFavorite() {
   const id = selectedDropzone.id;
 
   if (isFavorite(id)) {
-    favoriteDropzoneIds = favoriteDropzoneIds.filter(item => item !== id);
+    favoriteDropzoneIds =
+      favoriteDropzoneIds.filter(
+        item => item !== id
+      );
   } else {
     favoriteDropzoneIds.push(id);
   }
@@ -488,71 +930,39 @@ function toggleFavorite() {
   saveFavorites();
   renderFavorites();
 
-  const favoriteIndex = favoriteDropzoneIds.indexOf(id);
-  if (favoriteIndex >= 0) {
-    favoritesEl.value = id;
-  } else {
-    favoritesEl.value = "";
-  }
+  favoritesEl.value =
+    isFavorite(id) ? id : "";
 
   updateFavoriteButton();
 }
 
-function number(value, decimals = 0) {
-  if (value === null || value === undefined) return "—";
-  const n = Number(value);
-  return Number.isFinite(n) ? n.toFixed(decimals) : "—";
-}
-
-function formatNumber(value) {
-  if (value === null || value === undefined) return "—";
-  const n = Number(value);
-  return Number.isFinite(n) ? Math.round(n).toLocaleString() : "—";
-}
-
-function directionName(degrees) {
-  if (degrees === null || degrees === undefined) return "—";
-  const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
-    "S","SSW","SW","WSW","W","WNW","NW","NNW"];
-  const n = Number(degrees);
-  if (!Number.isFinite(n)) return "—";
-  return dirs[Math.round(n / 22.5) % 16];
-}
-
-function formatTime(time) {
-  if (!time) return "—";
-  const date = new Date(time);
-  if (Number.isNaN(date.getTime())) return time;
-  return date.toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit"
-  });
-}
-
-function formatDateTime(time) {
-  if (!time) return "—";
-  const date = new Date(time);
-  if (Number.isNaN(date.getTime())) return time;
-  return date.toLocaleString([], {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit"
-  });
-}
-
 function dzLocation(dz) {
-  return [dz.city, dz.state, dz.country]
+  return [
+    dz.city,
+    dz.state,
+    dz.country
+  ]
     .filter(Boolean)
     .join(", ");
 }
 
-function distanceMiles(lat1, lon1, lat2, lon2) {
-  const toRad = value => value * Math.PI / 180;
-  const earthRadiusMiles = 3958.7613;
+function distanceMiles(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+) {
+  const toRad =
+    value => value * Math.PI / 180;
 
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
+  const earthRadiusMiles =
+    3958.7613;
+
+  const dLat =
+    toRad(lat2 - lat1);
+
+  const dLon =
+    toRad(lon2 - lon1);
 
   const a =
     Math.sin(dLat / 2) ** 2 +
@@ -560,103 +970,159 @@ function distanceMiles(lat1, lon1, lat2, lon2) {
     Math.cos(toRad(lat2)) *
     Math.sin(dLon / 2) ** 2;
 
-  return earthRadiusMiles * 2 * Math.atan2(
-    Math.sqrt(a),
-    Math.sqrt(1 - a)
-  );
+  return earthRadiusMiles *
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    );
 }
 
-function renderNearbyDropzones(userLat, userLon) {
-  const nearby = allDropzones
-    .filter(dz =>
-      Number.isFinite(Number(dz.lat)) &&
-      Number.isFinite(Number(dz.lon))
-    )
-    .map(dz => ({
-      dz,
-      distance: distanceMiles(
-        userLat,
-        userLon,
-        Number(dz.lat),
-        Number(dz.lon)
+function renderNearbyDropzones(
+  userLat,
+  userLon
+) {
+  const nearby =
+    allDropzones
+      .filter(dz =>
+        Number.isFinite(Number(dz.lat)) &&
+        Number.isFinite(Number(dz.lon))
       )
-    }))
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, 10);
+      .map(dz => ({
+        dz,
+        distance: distanceMiles(
+          userLat,
+          userLon,
+          Number(dz.lat),
+          Number(dz.lon)
+        )
+      }))
+      .sort(
+        (a, b) =>
+          a.distance - b.distance
+      )
+      .slice(0, 10);
 
   nearbyListEl.innerHTML = "";
 
   if (!nearby.length) {
     nearbyStatusEl.textContent =
       "No drop zones with usable coordinates were found.";
+
     return;
   }
 
   nearbyStatusEl.textContent =
     "Showing the 10 closest locations based on straight-line distance.";
 
-  nearby.forEach(({ dz, distance }) => {
-    const item = document.createElement("div");
-    item.className = "nearby-item";
+  nearby.forEach(
+    ({ dz, distance }) => {
+      const item =
+        document.createElement("div");
 
-    const info = document.createElement("div");
-    const name = document.createElement("div");
-    name.className = "nearby-name";
-    name.textContent = dz.name + (dz.city ? " — " + dz.city : "");
+      item.className =
+        "nearby-item";
 
-    const location = document.createElement("div");
-    location.className = "nearby-location";
-    location.textContent = dzLocation(dz);
+      const info =
+        document.createElement("div");
 
-    info.appendChild(name);
-    info.appendChild(location);
+      const name =
+        document.createElement("div");
 
-    const actions = document.createElement("div");
-    const miles = document.createElement("div");
-    miles.className = "nearby-distance";
-    miles.textContent = distance < 10
-      ? distance.toFixed(1) + " mi"
-      : Math.round(distance).toLocaleString() + " mi";
+      name.className =
+        "nearby-name";
 
-    const useButton = document.createElement("button");
-    useButton.type = "button";
-    useButton.className = "nearby-use";
-    useButton.textContent = "Use";
-    useButton.addEventListener("click", () => {
-      dzSearchEl.value = "";
-      renderDropzoneOptions("");
-      dzEl.value = dz.id;
-      updateSelectedDropzone();
-      loadWeather();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+      name.textContent =
+        dz.name +
+        (dz.city ? " — " + dz.city : "");
 
-    actions.appendChild(miles);
-    actions.appendChild(useButton);
+      const location =
+        document.createElement("div");
 
-    item.appendChild(info);
-    item.appendChild(actions);
-    nearbyListEl.appendChild(item);
-  });
+      location.className =
+        "nearby-location";
+
+      location.textContent =
+        dzLocation(dz);
+
+      info.appendChild(name);
+      info.appendChild(location);
+
+      const actions =
+        document.createElement("div");
+
+      const miles =
+        document.createElement("div");
+
+      miles.className =
+        "nearby-distance";
+
+      miles.textContent =
+        distance < 10
+          ? distance.toFixed(1) + " mi"
+          : Math.round(distance).toLocaleString() + " mi";
+
+      const useButton =
+        document.createElement("button");
+
+      useButton.type = "button";
+      useButton.className =
+        "nearby-use";
+      useButton.textContent = "Use";
+
+      useButton.addEventListener(
+        "click",
+        () => {
+          dzSearchEl.value = "";
+
+          renderDropzoneOptions("");
+
+          dzEl.value = dz.id;
+
+          updateSelectedDropzone();
+          loadWeather();
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+        }
+      );
+
+      actions.appendChild(miles);
+      actions.appendChild(useButton);
+
+      item.appendChild(info);
+      item.appendChild(actions);
+
+      nearbyListEl.appendChild(item);
+    }
+  );
 }
 
 function findNearbyDropzones() {
   if (!allDropzones.length) {
     nearbyStatusEl.textContent =
       "The drop zone directory is still loading. Please try again.";
+
     return;
   }
 
   if (!navigator.geolocation) {
     nearbyStatusEl.textContent =
       "Location services are not supported by this browser.";
+
     return;
   }
 
   nearbyButtonEl.disabled = true;
-  nearbyButtonEl.textContent = "📍 Finding nearby drop zones...";
+
+  nearbyButtonEl.textContent =
+    "📍 Finding nearby drop zones...";
+
   nearbyStatusEl.textContent =
     "Your browser will ask for permission to use your location.";
+
   nearbyListEl.innerHTML = "";
 
   navigator.geolocation.getCurrentPosition(
@@ -665,8 +1131,11 @@ function findNearbyDropzones() {
         position.coords.latitude,
         position.coords.longitude
       );
+
       nearbyButtonEl.disabled = false;
-      nearbyButtonEl.textContent = "📍 Find Drop Zones Near Me";
+
+      nearbyButtonEl.textContent =
+        "📍 Find Drop Zones Near Me";
     },
     error => {
       console.error(error);
@@ -685,9 +1154,13 @@ function findNearbyDropzones() {
           "Location lookup timed out. Please try again.";
       }
 
-      nearbyStatusEl.textContent = message;
+      nearbyStatusEl.textContent =
+        message;
+
       nearbyButtonEl.disabled = false;
-      nearbyButtonEl.textContent = "📍 Find Drop Zones Near Me";
+
+      nearbyButtonEl.textContent =
+        "📍 Find Drop Zones Near Me";
     },
     {
       enableHighAccuracy: false,
@@ -697,32 +1170,52 @@ function findNearbyDropzones() {
   );
 }
 
-function renderDropzoneOptions(filter = "") {
-  const query = filter.trim().toLowerCase();
+function renderDropzoneOptions(
+  filter = ""
+) {
+  const query =
+    filter.trim().toLowerCase();
 
-  const matches = allDropzones.filter(dz => {
-    const haystack = [
-      dz.name, dz.city, dz.state, dz.country, dz.airport
-    ].join(" ").toLowerCase();
+  const matches =
+    allDropzones.filter(dz => {
+      const haystack = [
+        dz.name,
+        dz.city,
+        dz.state,
+        dz.country,
+        dz.airport
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
 
-    return !query || haystack.includes(query);
-  });
+      return (
+        !query ||
+        haystack.includes(query)
+      );
+    });
 
-  const currentValue = dzEl.value;
+  const currentValue =
+    dzEl.value;
 
   dzEl.innerHTML = "";
 
-  const groups = new Map();
+  const groups =
+    new Map();
 
   matches.forEach(dz => {
     const countryName =
-      dz.country === "US" ? "United States" : dz.country;
+      dz.country === "US"
+        ? "United States"
+        : dz.country;
 
     const stateName =
       dz.state || "Other";
 
     const groupKey =
-      countryName + " — " + stateName;
+      countryName +
+      " — " +
+      stateName;
 
     if (!groups.has(groupKey)) {
       groups.set(groupKey, []);
@@ -731,15 +1224,25 @@ function renderDropzoneOptions(filter = "") {
     groups.get(groupKey).push(dz);
   });
 
-  for (const [groupName, list] of groups) {
-    const group = document.createElement("optgroup");
+  for (
+    const [groupName, list]
+    of groups
+  ) {
+    const group =
+      document.createElement("optgroup");
+
     group.label = groupName;
 
     list.forEach(dz => {
-      const option = document.createElement("option");
+      const option =
+        document.createElement("option");
+
       option.value = dz.id;
-      option.textContent = dz.name +
+
+      option.textContent =
+        dz.name +
         (dz.city ? " — " + dz.city : "");
+
       group.appendChild(option);
     });
 
@@ -747,93 +1250,125 @@ function renderDropzoneOptions(filter = "") {
   }
 
   if (!matches.length) {
-    const option = document.createElement("option");
+    const option =
+      document.createElement("option");
+
     option.value = "";
-    option.textContent = "No drop zones found";
+    option.textContent =
+      "No drop zones found";
+
     dzEl.appendChild(option);
+
     selectedDropzone = null;
-    dzMetaEl.textContent = "Try a different search.";
+
+    dzMetaEl.textContent =
+      "Try a different search.";
+
     return;
   }
 
   const stillExists =
-    matches.some(dz => dz.id === currentValue);
+    matches.some(
+      dz => dz.id === currentValue
+    );
 
-  if (stillExists) {
-    dzEl.value = currentValue;
-  } else {
-    dzEl.value = matches[0].id;
-  }
+  dzEl.value =
+    stillExists
+      ? currentValue
+      : matches[0].id;
 
   updateSelectedDropzone();
 }
 
 function updateSelectedDropzone() {
   selectedDropzone =
-    allDropzones.find(dz => dz.id === dzEl.value) || null;
+    allDropzones.find(
+      dz => dz.id === dzEl.value
+    ) || null;
 
   if (!selectedDropzone) {
-    dzMetaEl.textContent = "Drop zone information unavailable.";
+    dzMetaEl.textContent =
+      "Drop zone information unavailable.";
+
     aglEl.textContent = "—";
+
+    updateFavoriteButton();
+
     return;
   }
 
   dzMetaEl.textContent =
     dzLocation(selectedDropzone) +
-    (selectedDropzone.airport
-      ? " • " + selectedDropzone.airport
-      : "");
+    (
+      selectedDropzone.airport
+        ? " • " +
+          selectedDropzone.airport
+        : ""
+    );
 
   updateAltitude();
   updateFavoriteButton();
 
-  if (isFavorite(selectedDropzone.id)) {
-        if (isFavorite(selectedDropzone.id)) {
-      favoritesEl.value = selectedDropzone.id;
-    } else {
-      favoritesEl.value = "";
-    }
-  }
+  favoritesEl.value =
+    isFavorite(selectedDropzone.id)
+      ? selectedDropzone.id
+      : "";
 }
 
 function updateAltitude() {
-  const altitude = Number(altEl.value) || 12500;
+  const altitude =
+    Number(altEl.value) || 12500;
 
   mslEl.textContent =
-    formatNumber(altitude) + " ft";
+    formatNumber(altitude) +
+    " ft";
 
   const elevation =
     selectedDropzone?.ground_elevation_ft;
 
-  if (Number.isFinite(Number(elevation))) {
+  if (
+    Number.isFinite(
+      Number(elevation)
+    )
+  ) {
     aglEl.textContent =
       formatNumber(
-        Math.max(0, altitude - Number(elevation))
-      ) + " ft";
+        Math.max(
+          0,
+          altitude -
+          Number(elevation)
+        )
+      ) +
+      " ft";
   } else {
     aglEl.textContent = "—";
   }
 }
 
 function renderJumpWind(data) {
-  const wind = data.jumpWind;
+  const wind =
+    data.jumpWind;
 
   if (!wind) {
     jumpWindEl.innerHTML =
       '<div class="error">Jump-altitude wind is unavailable.</div>';
+
     return;
   }
 
   aglEl.textContent =
-    formatNumber(data.jumpAltitude.agl_ft) + " ft";
+    formatNumber(
+      data.jumpAltitude.agl_ft
+    ) +
+    " ft";
 
   jumpWindEl.innerHTML = `
     <div class="big-wind">
-      ${number(wind.speed_kt, 1)} kt
+      ${windText(wind.speed_kt, 1)}
     </div>
 
     <div class="wind-direction">
-      From ${number(wind.direction_deg, 0)}°
+      From ${formatNumber(wind.direction_deg, 0)}°
       (${directionName(wind.direction_deg)})
     </div>
 
@@ -879,32 +1414,25 @@ function renderJumpWind(data) {
 }
 
 function renderCurrent(data) {
-  const h = data.forecast?.hourly;
+  const h =
+    data.forecast?.hourly;
 
-  if (!h || !h.time?.length) {
+  if (
+    !h ||
+    !Array.isArray(h.time) ||
+    !h.time.length
+  ) {
     currentEl.innerHTML =
       '<div class="error">Current conditions are unavailable.</div>';
+
     return;
   }
 
-  let index = 0;
-  let best = Infinity;
-  const now = Date.now();
-
-  h.time.forEach((time, i) => {
-    const difference =
-      Math.abs(new Date(time).getTime() - now);
-
-    if (difference < best) {
-      best = difference;
-      index = i;
-    }
-  });
-
-  const visibility =
-    h.visibility?.[index] == null
-      ? null
-      : Number(h.visibility[index]) * 0.621371;
+  const index =
+    findCurrentForecastIndex(
+      h.time,
+      data.forecast?.timezone
+    );
 
   currentEl.innerHTML = `
     <div class="weather-grid">
@@ -912,56 +1440,56 @@ function renderCurrent(data) {
       <div class="metric">
         <div class="metric-title">Temperature</div>
         <div class="metric-value">
-          ${number(h.temperature_2m?.[index])}°F
+          ${temperatureText(h.temperature_2m?.[index])}
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Surface wind</div>
         <div class="metric-value">
-          ${number(h.wind_speed_10m?.[index])} kt
+          ${windText(h.wind_speed_10m?.[index])}
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Wind direction</div>
         <div class="metric-value">
-          ${number(h.wind_direction_10m?.[index])}°
+          ${formatNumber(h.wind_direction_10m?.[index], 0)}°
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Wind gusts</div>
         <div class="metric-value">
-          ${number(h.wind_gusts_10m?.[index])} kt
+          ${windText(h.wind_gusts_10m?.[index])}
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Cloud cover</div>
         <div class="metric-value">
-          ${number(h.cloud_cover?.[index])}%
+          ${formatNumber(h.cloud_cover?.[index], 0)}%
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Rain chance</div>
         <div class="metric-value">
-          ${number(h.precipitation_probability?.[index])}%
+          ${formatNumber(h.precipitation_probability?.[index], 0)}%
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Visibility</div>
         <div class="metric-value">
-          ${number(visibility, 1)} mi
+          ${visibilityText(h.visibility?.[index])}
         </div>
       </div>
 
       <div class="metric">
         <div class="metric-title">Forecast time</div>
         <div class="metric-value">
-          ${formatTime(h.time[index])}
+          ${formatLocalTime(h.time[index])}
         </div>
       </div>
 
@@ -970,34 +1498,38 @@ function renderCurrent(data) {
 }
 
 function renderHours(data) {
-  const series = data.jumpWindSeries || [];
+  const series =
+    data.jumpWindSeries || [];
 
   if (!series.length) {
     hoursEl.innerHTML =
       '<div class="error">Hourly forecast unavailable.</div>';
+
     return;
   }
 
   hoursEl.innerHTML = "";
 
   series.forEach(item => {
-    const row = document.createElement("div");
+    const row =
+      document.createElement("div");
+
     row.className = "hour";
 
     row.innerHTML = `
       <div>
         <div class="hour-time">
-          ${formatTime(item.time)}
+          ${formatLocalTime(item.time)}
         </div>
 
         <div class="hour-sub">
-          From ${number(item.direction_deg, 0)}°
+          From ${formatNumber(item.direction_deg, 0)}°
           (${directionName(item.direction_deg)})
         </div>
       </div>
 
       <div class="hour-wind">
-        ${number(item.speed_kt, 1)} kt
+        ${windText(item.speed_kt, 1)}
       </div>
     `;
 
@@ -1007,7 +1539,9 @@ function renderHours(data) {
 
 function renderMetar(data) {
   const metar =
-    Array.isArray(data.metar) ? data.metar : [];
+    Array.isArray(data.metar)
+      ? data.metar
+      : [];
 
   if (!metar.length) {
     metarEl.innerHTML = `
@@ -1015,10 +1549,12 @@ function renderMetar(data) {
         No recent aviation observation was returned for this drop zone.
       </div>
     `;
+
     return;
   }
 
-  const latest = metar[metar.length - 1];
+  const latest =
+    metar[metar.length - 1];
 
   let raw = "";
 
@@ -1066,15 +1602,18 @@ async function loadWeather() {
     '<div class="loading">Loading aviation observation...</div>';
 
   try {
-    const response = await fetch(
-      "/api/weather?dz=" +
-      encodeURIComponent(selectedDropzone.id) +
-      "&alt=" +
-      encodeURIComponent(altitude),
-      {
-        cache: "no-store"
-      }
-    );
+    const response =
+      await fetch(
+        "/api/weather?dz=" +
+        encodeURIComponent(
+          selectedDropzone.id
+        ) +
+        "&alt=" +
+        encodeURIComponent(altitude),
+        {
+          cache: "no-store"
+        }
+      );
 
     if (!response.ok) {
       throw new Error(
@@ -1083,10 +1622,14 @@ async function loadWeather() {
       );
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
+
+    lastWeatherData = data;
 
     selectedDropzone =
-      data.dropzone || selectedDropzone;
+      data.dropzone ||
+      selectedDropzone;
 
     updateAltitude();
     renderJumpWind(data);
@@ -1096,6 +1639,8 @@ async function loadWeather() {
 
   } catch (error) {
     console.error(error);
+
+    lastWeatherData = null;
 
     jumpWindEl.innerHTML = `
       <div class="error">
@@ -1125,12 +1670,14 @@ async function loadWeather() {
 
 async function loadDropzones() {
   try {
-    const response = await fetch(
-      "/api/dropzones?ts=" + Date.now(),
-      {
-        cache: "no-store"
-      }
-    );
+    const response =
+      await fetch(
+        "/api/dropzones?ts=" +
+        Date.now(),
+        {
+          cache: "no-store"
+        }
+      );
 
     if (!response.ok) {
       throw new Error(
@@ -1139,7 +1686,8 @@ async function loadDropzones() {
       );
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     allDropzones =
       Array.isArray(data.dropzones)
@@ -1147,7 +1695,8 @@ async function loadDropzones() {
         : [];
 
     const count =
-      data.count || allDropzones.length;
+      data.count ||
+      allDropzones.length;
 
     dzMetaEl.textContent =
       `${count} current North American USPA-affiliated locations`;
@@ -1171,16 +1720,63 @@ async function loadDropzones() {
   }
 }
 
-dzEl.addEventListener("change", () => {
-  updateSelectedDropzone();
-  loadWeather();
-});
+function rerenderWeather() {
+  if (!lastWeatherData) return;
 
-dzSearchEl.addEventListener("input", () => {
-  renderDropzoneOptions(
-    dzSearchEl.value
-  );
-});
+  renderJumpWind(lastWeatherData);
+  renderCurrent(lastWeatherData);
+  renderHours(lastWeatherData);
+  renderMetar(lastWeatherData);
+}
+
+function settingsChanged() {
+  displaySettings = {
+    wind: windUnitEl.value,
+    temp: tempUnitEl.value,
+    visibility: visibilityUnitEl.value,
+    time: timeFormatEl.value
+  };
+
+  saveDisplaySettings();
+  rerenderWeather();
+}
+
+windUnitEl.addEventListener(
+  "change",
+  settingsChanged
+);
+
+tempUnitEl.addEventListener(
+  "change",
+  settingsChanged
+);
+
+visibilityUnitEl.addEventListener(
+  "change",
+  settingsChanged
+);
+
+timeFormatEl.addEventListener(
+  "change",
+  settingsChanged
+);
+
+dzEl.addEventListener(
+  "change",
+  () => {
+    updateSelectedDropzone();
+    loadWeather();
+  }
+);
+
+dzSearchEl.addEventListener(
+  "input",
+  () => {
+    renderDropzoneOptions(
+      dzSearchEl.value
+    );
+  }
+);
 
 favoriteButtonEl.addEventListener(
   "click",
@@ -1197,14 +1793,17 @@ removeFavoriteButtonEl.addEventListener(
   () => {
     if (
       !selectedDropzone ||
-      !isFavorite(selectedDropzone.id)
+      !isFavorite(
+        selectedDropzone.id
+      )
     ) {
       return;
     }
 
     favoriteDropzoneIds =
       favoriteDropzoneIds.filter(
-        id => id !== selectedDropzone.id
+        id =>
+          id !== selectedDropzone.id
       );
 
     saveFavorites();
@@ -1218,7 +1817,8 @@ removeFavoriteButtonEl.addEventListener(
 favoritesEl.addEventListener(
   "change",
   () => {
-    const id = favoritesEl.value;
+    const id =
+      favoritesEl.value;
 
     if (!id) return;
 
@@ -1229,19 +1829,20 @@ favoritesEl.addEventListener(
 
     if (!favorite) return;
 
-    dzEl.value = favorite.id;
+    dzEl.value =
+      favorite.id;
+
     dzSearchEl.value = "";
 
     renderDropzoneOptions("");
 
-    dzEl.value = favorite.id;
+    dzEl.value =
+      favorite.id;
 
     updateSelectedDropzone();
     loadWeather();
   }
 );
-
-renderFavorites();
 
 altEl.addEventListener(
   "change",
@@ -1256,8 +1857,11 @@ altEl.addEventListener(
   updateAltitude
 );
 
+applySettingsToControls();
+renderFavorites();
 loadDropzones();
 </script>
-  <script src="profile.js"></script>
+
+<script src="profile.js"></script>
 </body>
 </html>
