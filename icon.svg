@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#061326"/><stop offset="1" stop-color="#0b4f86"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#35d9ff"/><stop offset="1" stop-color="#0879e8"/></linearGradient>
+ <linearGradient id="text" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff"/><stop offset=".48" stop-color="#dfe8f2"/><stop offset=".49" stop-color="#48dfff"/><stop offset="1" stop-color="#12a9ef"/></linearGradient>
+</defs>
+<rect x="6" y="6" width="500" height="500" rx="88" fill="url(#bg)" stroke="#23bfff" stroke-width="10"/>
+<path d="M72 302c54-78 92-74 139-103 28-18 46-42 62-76 17 37 34 61 64 79 43 25 83 27 119 92" fill="none" stroke="url(#blue)" stroke-width="20" stroke-linecap="round" opacity=".9"/>
+<path d="M83 266c48-12 76-34 106-66" fill="none" stroke="#c9f7ff" stroke-width="9" stroke-linecap="round"/>
+<path d="M125 111 Q256 38 387 111 L358 190 Q256 137 154 190 Z" fill="#f8fbff" stroke="#0a4c86" stroke-width="8"/>
+<path d="M154 190 L125 111 M202 168 L183 83 M256 156 L256 65 M310 168 L329 83 M358 190 L387 111" stroke="#0a4c86" stroke-width="7" fill="none"/>
+<path d="M171 130 L202 168 M341 130 L310 168" stroke="#ffffff" stroke-width="6"/>
+<circle cx="256" cy="254" r="27" fill="#07111f" stroke="#35d9ff" stroke-width="6"/>
+<path d="M237 278 L216 330 L256 357 L296 330 L275 278" fill="#07111f" stroke="#35d9ff" stroke-width="6"/>
+<path d="M232 291 L196 258 M280 291 L316 258 M238 352 L214 397 M274 352 L299 397" stroke="#f5f7fb" stroke-width="10" stroke-linecap="round"/>
+<circle cx="404" cy="190" r="28" fill="#ffc33d"/>
+<g stroke="#ffc33d" stroke-width="7" stroke-linecap="round"><path d="M404 150v-16"/><path d="M404 230v16"/><path d="M364 190h-16"/><path d="M444 190h16"/></g>
+<path d="M55 391 Q256 346 457 391 Q355 441 256 424 Q156 441 55 391Z" fill="#061a32"/>
+<text x="256" y="474" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="57" font-weight="800" font-style="italic" fill="url(#text)">JumpCast</text>
+<path d="M118 487 Q256 462 394 487" fill="none" stroke="#1bc9ff" stroke-width="5" stroke-linecap="round"/>
+</svg>
