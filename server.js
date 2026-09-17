@@ -619,25 +619,6 @@ async function getWeatherForDropzone(
     targetAltitudeFt
   );
 }
-app.get("/api/weather-test",async(req,res)=>{
-  try{
-    const data=await fetchJson(
-      "https://api.open-meteo.com/v1/forecast?latitude=42.174165&longitude=-84.261341&hourly=temperature_2m&forecast_days=1",
-      {},
-      15000
-    );
-
-    res.json({
-      success:true,
-      data
-    });
-  }catch(error){
-    res.status(502).json({
-      success:false,
-      error:error.message
-    });
-  }
-});
 app.get("/sw.js",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"sw.js")
