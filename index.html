@@ -1,96 +1,802 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07111f">
-<title>JumpCast V2</title>
-<style>
-:root{--bg:#07111f;--card:#0d1b2d;--muted:#91a4ba;--text:#f5f8fc;--accent:#65d6ff;--good:#65e6a2;--warn:#ffd166;--bad:#ff6b6b;--line:#1b3048}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#07111f,#0a1728 55%,#07111f);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 16px 34px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:950;font-size:27px}.brand span{color:var(--accent)}.tag{font-size:11px;color:var(--muted);margin-top:2px}.card{background:#0d1b2df2;border:1px solid var(--line);border-radius:20px;padding:17px;margin:12px 0}.label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:850}.selectrow{display:flex;gap:9px;margin-top:9px}.selectrow select,.selectrow input{flex:1;background:#14263c;color:white;border:1px solid var(--line);border-radius:12px;padding:12px}.hero{display:flex;justify-content:space-between;align-items:center}.status{font-weight:950;font-size:16px;margin-top:5px}.status.good{color:var(--good)}.status.warn{color:var(--warn)}.status.bad{color:var(--bad)}.score{font-size:38px;font-weight:950}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.metric{background:#0a1728;border-radius:14px;padding:12px}.metric b{display:block;font-size:19px;margin-top:4px}.metric small{color:var(--muted)}.row{display:flex;justify-content:space-between;gap:10px}.hours{display:flex;gap:8px;overflow:auto}.hour{min-width:78px;background:#0a1728;border-radius:13px;padding:10px;text-align:center}.hour b{display:block;margin:6px 0}.hour small{color:var(--muted)}.bar{height:9px;background:#17304a;border-radius:20px;overflow:hidden}.fill{height:100%;background:var(--good);width:70%}.button{border:0;border-radius:12px;background:#14263c;color:white;padding:10px 13px;font-weight:800}.note{font-size:11px;line-height:1.5;color:var(--muted)}.source{font-size:10px;color:var(--muted);margin-top:9px}.loading{color:var(--muted);padding:18px 0}.error{color:var(--bad);font-size:13px}.nav{position:sticky;bottom:10px;display:flex;justify-content:space-around;background:#0b192aeb;border:1px solid var(--line);border-radius:18px;padding:8px;backdrop-filter:blur(12px)}.nav button{background:transparent;border:0;color:var(--muted);font-weight:800}.nav .active{color:var(--accent)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>JumpCast</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #07111f;
+      color: #f5f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .app {
+      width: 100%;
+      max-width: 620px;
+      margin: auto;
+      padding: 24px 18px 50px;
+    }
+    .logo {
+      font-size: 36px;
+      font-weight: 800;
+      margin: 8px 0 4px;
+    }
+    .tagline {
+      color: #9eabbc;
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: #101c2d;
+      border: 1px solid #263850;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: 19px;
+      margin: 0 0 15px;
+    }
+    label {
+      display: block;
+      color: #aeb9c8;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+    select, input {
+      width: 100%;
+      border: 1px solid #344963;
+      border-radius: 12px;
+      background: #091526;
+      color: #fff;
+      padding: 14px;
+      font-size: 16px;
+      outline: none;
+    }
+    select:focus, input:focus { border-color: #6d8fb8; }
+    .search { margin-bottom: 10px; }
+    .dz-meta {
+      color: #8f9eb1;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 9px;
+    }
+    .alt-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: #9eabbc;
+      font-size: 13px;
+    }
+    .big-wind {
+      font-size: 38px;
+      font-weight: 800;
+      margin: 5px 0;
+    }
+    .wind-direction {
+      color: #aeb9c8;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+    .weather-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .metric {
+      background: #0a1627;
+      border: 1px solid #22364f;
+      border-radius: 13px;
+      padding: 13px;
+    }
+    .metric-title {
+      color: #8f9eb1;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    .metric-value {
+      font-size: 17px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+    .hours {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .hour {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #0a1627;
+      border: 1px solid #22364f;
+    }
+    .hour-time {
+      min-width: 58px;
+      font-weight: 700;
+    }
+    .hour-wind {
+      text-align: right;
+      font-weight: 700;
+    }
+    .hour-sub {
+      color: #8f9eb1;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+    .muted {
+      color: #9eabbc;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .source {
+      color: #738399;
+      font-size: 11px;
+      line-height: 1.5;
+      margin-top: 14px;
+    }
+    .footer {
+      text-align: center;
+      color: #66758a;
+      font-size: 12px;
+      margin-top: 25px;
+    }
+    .loading { color: #aeb9c8; }
+    .error { color: #ff9d9d; line-height: 1.5; }
+    .success { color: #a9d6b1; }
+    @media (max-width: 400px) {
+      .weather-grid { grid-template-columns: 1fr; }
+      .big-wind { font-size: 34px; }
+    }
+  </style>
 </head>
 <body>
-<div class="app">
-  <div class="top">
-    <div><div class="brand">🪂 Jump<span>Cast</span></div><div class="tag">Skydiving weather, built for jumpers</div></div>
-    <button class="button" onclick="load()">↻</button>
-  </div>
+<main class="app">
+  <div class="logo">JumpCast</div>
+  <div class="tagline">Skydiving weather information at a glance.</div>
 
-  <div class="card">
-    <div class="label">Drop zone</div>
-    <div class="selectrow">
-      <select id="dz"></select>
-      <input id="alt" type="number" value="12500" min="1000" max="20000" step="500" aria-label="Jump altitude">
+  <section class="card">
+    <h2>Drop Zone</h2>
+
+    <label for="dzSearch">Find a drop zone</label>
+    <input id="dzSearch" class="search" type="search"
+      placeholder="Search by name, city, state or country">
+
+    <label for="dz">Select a drop zone</label>
+    <select id="dz">
+      <option value="">Loading USPA drop zones...</option>
+    </select>
+
+    <div id="dzMeta" class="dz-meta">
+      Loading the current USPA-affiliated directory...
     </div>
-    <div class="tag" style="margin-top:7px">Jump altitude (ft MSL) • prototype</div>
+  </section>
+
+  <section class="card">
+    <h2>Jump Altitude</h2>
+
+    <label for="alt">Altitude MSL (feet)</label>
+    <input id="alt" type="number" value="12500"
+      min="1000" max="20000" step="500">
+
+    <div class="alt-info">
+      <span>MSL: <strong id="msl">12,500 ft</strong></span>
+      <span>AGL: <strong id="agl">—</strong></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Wind at Jump Altitude</h2>
+    <div id="jumpWind">
+      <div class="loading">Loading live conditions...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Current Conditions</h2>
+    <div id="current">
+      <div class="loading">Loading current conditions...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Next 12 Hours</h2>
+    <div id="hours">
+      <div class="loading">Loading hourly forecast...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Altitude Calculation</h2>
+    <p id="altitudeNote" class="muted">
+      Wind is being calculated for your selected MSL altitude.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Aviation Observation</h2>
+    <div id="metar">
+      <div class="loading">Loading aviation observation...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Community Reports</h2>
+    <p class="muted">
+      Community reports will appear here in a future update.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Safety &amp; Data Note</h2>
+    <p class="muted">
+      JumpCast provides weather information and model-derived wind
+      estimates. It does not authorize a jump or replace the DZ's
+      operating decision, pilot or instructor judgment, applicable
+      regulations, or current local observations.
+    </p>
+  </section>
+
+  <div class="footer">
+    JumpCast • Weather information for skydivers
   </div>
-
-  <div id="main"><div class="card loading">Loading live conditions…</div></div>
-
-  <div class="card">
-    <div class="label">Community reports</div>
-    <div class="note" style="margin-top:7px">Coming next: moderated DZ reports for surface wind, clouds, rain and “currently jumping” status.</div>
-  </div>
-
-  <div class="card">
-    <div class="label">Safety / data note</div>
-    <div class="note" style="margin-top:7px">JumpCast presents weather information; it does not authorize a jump or replace the DZ's operating decision, pilot/instructor judgment, applicable regulations, or current local observations.</div>
-    <div class="source">Live forecast: Open-Meteo • Aviation observation: NOAA Aviation Weather Center</div>
-  </div>
-
-  <div class="nav"><button class="active">🏠 Home</button><button>📍 DZs</button><button>📈 Forecast</button><button>⚙️ Profile</button></div>
-
-  <footer style="text-align:center;padding:12px 6px 0;color:var(--muted);font-size:11px;line-height:1.5">App created by Timothy Howell<br>Website created by Timothy Howell</footer>
-</div>
+</main>
 
 <script>
-let dzData={};
-const $=id=>document.getElementById(id);
-async function init(){
-  dzData=await fetch('/api/dropzones').then(r=>r.json());
-  $('dz').innerHTML=Object.keys(dzData).map(n=>`<option>${n}</option>`).join('');
-  $('dz').onchange=load; $('alt').onchange=load; load();
+const dzEl = document.getElementById("dz");
+const dzSearchEl = document.getElementById("dzSearch");
+const dzMetaEl = document.getElementById("dzMeta");
+const altEl = document.getElementById("alt");
+const mslEl = document.getElementById("msl");
+const aglEl = document.getElementById("agl");
+const jumpWindEl = document.getElementById("jumpWind");
+const currentEl = document.getElementById("current");
+const hoursEl = document.getElementById("hours");
+const altitudeNoteEl = document.getElementById("altitudeNote");
+const metarEl = document.getElementById("metar");
+
+let allDropzones = [];
+let selectedDropzone = null;
+
+function number(value, decimals = 0) {
+  if (value === null || value === undefined) return "—";
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toFixed(decimals) : "—";
 }
-function mphToKn(x){return x}
-function fmt(x){return x==null?'—':Math.round(x)}
-function windLabel(dir){if(dir==null)return '—';const a=['N','NE','E','SE','S','SW','W','NW'];return a[Math.round(dir/45)%8]}
-function render(d){
-  const h=d.forecast.hourly, now=new Date();
-  let i=0, best=Infinity;
-  h.time.forEach((t,j)=>{let diff=Math.abs(new Date(t)-now);if(diff<best){best=diff;i=j}});
-  const w=h.wind_speed_10m?.[i], g=h.wind_gusts_10m?.[i], dir=h.wind_direction_10m?.[i];
-  const rain=h.precipitation_probability?.[i], cloud=h.cloud_cover?.[i], vis=h.visibility?.[i];
-  const w900=h.wind_speed_900hPa?.[i], d900=h.wind_direction_900hPa?.[i];
-  const w700=h.wind_speed_700hPa?.[i], d700=h.wind_direction_700hPa?.[i];
-  let score=10; if(w>18)score-=2; if(g>25)score-=2; if(rain>40)score-=2; if(cloud>90)score-=2; if(vis<8000)score-=2;
-  score=Math.max(0,Math.min(10,score));
-  const cls=score>=7?'good':score>=4?'warn':'bad', text=score>=7?'CONDITIONS LOOK FAVORABLE':score>=4?'CONDITIONS TO WATCH':'CONDITIONS MAY BE LIMITING';
-  let hours=''; for(let j=i;j<Math.min(i+8,h.time.length);j++){hours+=`<div class="hour"><small>${new Date(h.time[j]).toLocaleTimeString([], {hour:'numeric'})}</small><b>${fmt(h.wind_speed_10m[j])} kt</b><small>${fmt(h.precipitation_probability[j])}% rain</small></div>`}
-  $('main').innerHTML=`
-  <div class="card"><div class="hero"><div><div class="label">Live conditions</div><div class="status ${cls}">● ${text}</div><div class="tag">${d.dropzone.name} • ${new Date(h.time[i]).toLocaleString()}</div></div><div class="score">${score.toFixed(1)}<span style="font-size:13px;color:var(--muted)">/10</span></div></div>
-  <div class="grid">
-    <div class="metric"><small>Surface wind</small><b>${fmt(w)} kt</b><small>${windLabel(dir)} • gust ${fmt(g)} kt</small></div>
-    <div class="metric"><small>Cloud cover</small><b>${fmt(cloud)}%</b><small>Model cloud fraction</small></div>
-    <div class="metric"><small>Visibility</small><b>${vis==null?'—':(vis/1609).toFixed(1)+' mi'}</b><small>Forecast visibility</small></div>
-    <div class="metric"><small>Rain chance</small><b>${fmt(rain)}%</b><small>Current forecast hour</small></div>
-  </div>
-  <div class="card" style="margin:12px 0 0;padding:14px;background:#0a1728"><div class="row"><div><div class="label">Winds aloft proxy</div><b>~3,000 ft: ${fmt(w900)} kt ${windLabel(d900)}</b></div><div style="text-align:right"><div class="label">~10,000 ft</div><b>${fmt(w700)} kt ${windLabel(d700)}</b></div></div><div class="note" style="margin-top:8px">Pressure-level model winds are approximate altitude proxies; production JumpCast should use dedicated aviation wind products for exact jump-altitude calculations.</div></div>
-  </div>
-  <div class="card"><div class="label">Next hours</div><div class="hours" style="margin-top:11px">${hours}</div></div>
-  <div class="card"><div class="label">Aviation observation</div><div class="note" style="margin-top:8px">${d.metar?.[0]?.rawOb || 'No recent METAR returned for this prototype DZ.'}</div></div>
-  <div class="source">Retrieved ${new Date(d.source.retrieved_at).toLocaleTimeString()}</div>`;
+
+function formatNumber(value) {
+  if (value === null || value === undefined) return "—";
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.round(n).toLocaleString() : "—";
 }
-async function load(){
-  $('main').innerHTML='<div class="card loading">Loading live conditions…</div>';
-  try{
-    const name=$('dz').value||'Skydive Midwest';
-    const r=await fetch('/api/weather?dz='+encodeURIComponent(name));
-    if(!r.ok)throw new Error('Weather request failed');
-    render(await r.json());
-  }catch(e){$('main').innerHTML='<div class="card error">Could not load live weather. Check the server connection and try again.</div>'}
+
+function directionName(degrees) {
+  if (degrees === null || degrees === undefined) return "—";
+  const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
+    "S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  const n = Number(degrees);
+  if (!Number.isFinite(n)) return "—";
+  return dirs[Math.round(n / 22.5) % 16];
 }
-init();
+
+function formatTime(time) {
+  if (!time) return "—";
+  const date = new Date(time);
+  if (Number.isNaN(date.getTime())) return time;
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function formatDateTime(time) {
+  if (!time) return "—";
+  const date = new Date(time);
+  if (Number.isNaN(date.getTime())) return time;
+  return date.toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function dzLocation(dz) {
+  return [dz.city, dz.state, dz.country]
+    .filter(Boolean)
+    .join(", ");
+}
+
+function renderDropzoneOptions(filter = "") {
+  const query = filter.trim().toLowerCase();
+
+  const matches = allDropzones.filter(dz => {
+    const haystack = [
+      dz.name, dz.city, dz.state, dz.country, dz.airport
+    ].join(" ").toLowerCase();
+
+    return !query || haystack.includes(query);
+  });
+
+  const currentValue = dzEl.value;
+
+  dzEl.innerHTML = "";
+
+  const groups = new Map();
+
+  matches.forEach(dz => {
+    const countryName =
+      dz.country === "US" ? "United States" : dz.country;
+
+    const stateName =
+      dz.state || "Other";
+
+    const groupKey =
+      countryName + " — " + stateName;
+
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, []);
+    }
+
+    groups.get(groupKey).push(dz);
+  });
+
+  for (const [groupName, list] of groups) {
+    const group = document.createElement("optgroup");
+    group.label = groupName;
+
+    list.forEach(dz => {
+      const option = document.createElement("option");
+      option.value = dz.id;
+      option.textContent = dz.name +
+        (dz.city ? " — " + dz.city : "");
+      group.appendChild(option);
+    });
+
+    dzEl.appendChild(group);
+  }
+
+  if (!matches.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No drop zones found";
+    dzEl.appendChild(option);
+    selectedDropzone = null;
+    dzMetaEl.textContent = "Try a different search.";
+    return;
+  }
+
+  const stillExists =
+    matches.some(dz => dz.id === currentValue);
+
+  if (stillExists) {
+    dzEl.value = currentValue;
+  } else {
+    dzEl.value = matches[0].id;
+  }
+
+  updateSelectedDropzone();
+}
+
+function updateSelectedDropzone() {
+  selectedDropzone =
+    allDropzones.find(dz => dz.id === dzEl.value) || null;
+
+  if (!selectedDropzone) {
+    dzMetaEl.textContent = "Drop zone information unavailable.";
+    aglEl.textContent = "—";
+    return;
+  }
+
+  dzMetaEl.textContent =
+    dzLocation(selectedDropzone) +
+    (selectedDropzone.airport
+      ? " • " + selectedDropzone.airport
+      : "");
+
+  updateAltitude();
+}
+
+function updateAltitude() {
+  const altitude = Number(altEl.value) || 12500;
+
+  mslEl.textContent =
+    formatNumber(altitude) + " ft";
+
+  const elevation =
+    selectedDropzone?.ground_elevation_ft;
+
+  if (Number.isFinite(Number(elevation))) {
+    aglEl.textContent =
+      formatNumber(
+        Math.max(0, altitude - Number(elevation))
+      ) + " ft";
+  } else {
+    aglEl.textContent = "—";
+  }
+}
+
+function renderJumpWind(data) {
+  const wind = data.jumpWind;
+
+  if (!wind) {
+    jumpWindEl.innerHTML =
+      '<div class="error">Jump-altitude wind is unavailable.</div>';
+    return;
+  }
+
+  const speed = number(wind.speed_kt, 1);
+  const direction = number(wind.direction_deg, 0);
+  const dirName = directionName(wind.direction_deg);
+
+  const groundElevation =
+    data.dropzone.ground_elevation_ft;
+
+  aglEl.textContent =
+    formatNumber(data.jumpAltitude.agl_ft) + " ft";
+
+  jumpWindEl.innerHTML = `
+    <div class="big-wind">${speed} kt</div>
+
+    <div class="wind-direction">
+      From ${direction}° (${dirName})
+    </div>
+
+    <div class="weather-grid">
+      <div class="metric">
+        <div class="metric-title">Target altitude</div>
+        <div class="metric-value">
+          ${formatNumber(data.jumpAltitude.msl_ft)} ft MSL
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Above ground</div>
+        <div class="metric-value">
+          ${formatNumber(data.jumpAltitude.agl_ft)} ft AGL
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">DZ elevation</div>
+        <div class="metric-value">
+          ${formatNumber(groundElevation)} ft MSL
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">ICAO / METAR</div>
+        <div class="metric-value">
+          ${data.dropzone.icao || "Unavailable"}
+        </div>
+      </div>
+    </div>
+
+    <div class="source">
+      ${wind.method || "Altitude-adjusted wind estimate"}
+    </div>
+  `;
+
+  altitudeNoteEl.textContent =
+    "JumpCast uses pressure-level wind data and geopotential heights to estimate wind at the selected MSL altitude. DZ elevation is taken from the weather model when an exact elevation is not available in the directory.";
+}
+
+function renderCurrent(data) {
+  const forecast = data.forecast;
+
+  if (!forecast || !forecast.hourly) {
+    currentEl.innerHTML =
+      '<div class="error">Current forecast data is unavailable.</div>';
+    return;
+  }
+
+  const h = forecast.hourly;
+
+  if (!h.time || !h.time.length) {
+    currentEl.innerHTML =
+      '<div class="error">Current conditions are unavailable.</div>';
+    return;
+  }
+
+  let index = 0;
+  const now = Date.now();
+  let best = Infinity;
+
+  h.time.forEach((time, i) => {
+    const difference =
+      Math.abs(new Date(time).getTime() - now);
+
+    if (difference < best) {
+      best = difference;
+      index = i;
+    }
+  });
+
+  const temp = h.temperature_2m?.[index];
+  const cloud = h.cloud_cover?.[index];
+  const visibilityKm = h.visibility?.[index];
+
+  const visibilityMiles =
+    visibilityKm === null ||
+    visibilityKm === undefined
+      ? null
+      : Number(visibilityKm) * 0.621371;
+
+  const precip =
+    h.precipitation_probability?.[index];
+
+  const wind = h.wind_speed_10m?.[index];
+  const gust = h.wind_gusts_10m?.[index];
+  const windDir = h.wind_direction_10m?.[index];
+
+  currentEl.innerHTML = `
+    <div class="weather-grid">
+      <div class="metric">
+        <div class="metric-title">Temperature</div>
+        <div class="metric-value">${number(temp, 0)}°F</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Surface wind</div>
+        <div class="metric-value">${number(wind, 0)} kt</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Wind gusts</div>
+        <div class="metric-value">${number(gust, 0)} kt</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Wind direction</div>
+        <div class="metric-value">${number(windDir, 0)}°</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Cloud cover</div>
+        <div class="metric-value">${number(cloud, 0)}%</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Visibility</div>
+        <div class="metric-value">${number(visibilityMiles, 1)} mi</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Precipitation chance</div>
+        <div class="metric-value">${number(precip, 0)}%</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">Forecast time</div>
+        <div class="metric-value">${formatTime(h.time[index])}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderHours(data) {
+  const series = data.jumpWindSeries;
+
+  if (!series || !series.length) {
+    hoursEl.innerHTML =
+      '<div class="error">Hourly wind forecast is unavailable.</div>';
+    return;
+  }
+
+  hoursEl.innerHTML = "";
+
+  series.forEach(item => {
+    const speed = number(item.speed_kt, 1);
+    const direction = number(item.direction_deg, 0);
+    const dir = directionName(item.direction_deg);
+
+    const row = document.createElement("div");
+    row.className = "hour";
+
+    row.innerHTML = `
+      <div>
+        <div class="hour-time">${formatTime(item.time)}</div>
+        <div class="hour-sub">
+          From ${direction}° (${dir})
+        </div>
+      </div>
+
+      <div class="hour-wind">${speed} kt</div>
+    `;
+
+    hoursEl.appendChild(row);
+  });
+}
+
+function renderMetar(data) {
+  const metar =
+    Array.isArray(data.metar) ? data.metar : [];
+
+  if (!metar.length) {
+    metarEl.innerHTML = `
+      <div class="muted">
+        No recent aviation observation was returned for this drop zone.
+        Some locations do not have a METAR station.
+      </div>
+    `;
+    return;
+  }
+
+  const latest = metar[metar.length - 1];
+
+  let raw = "";
+
+  if (typeof latest === "string") {
+    raw = latest;
+  } else if (latest && latest.rawOb) {
+    raw = latest.rawOb;
+  } else if (latest && latest.raw) {
+    raw = latest.raw;
+  } else {
+    raw = JSON.stringify(latest);
+  }
+
+  metarEl.innerHTML = `
+    <div class="metric">
+      <div class="metric-title">Latest aviation observation</div>
+      <div class="metric-value">${raw}</div>
+    </div>
+  `;
+}
+
+async function loadWeather() {
+  updateAltitude();
+
+  const dz = dzEl.value;
+  const altitude = Number(altEl.value) || 12500;
+
+  if (!dz) return;
+
+  jumpWindEl.innerHTML =
+    '<div class="loading">Loading live conditions...</div>';
+
+  currentEl.innerHTML =
+    '<div class="loading">Loading current conditions...</div>';
+
+  hoursEl.innerHTML =
+    '<div class="loading">Loading hourly forecast...</div>';
+
+  metarEl.innerHTML =
+    '<div class="loading">Loading aviation observation...</div>';
+
+  try {
+    const url =
+      "/api/weather?dz=" +
+      encodeURIComponent(dz) +
+      "&alt=" +
+      encodeURIComponent(altitude);
+
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 30000);
+
+    const response = await fetch(url, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      throw new Error(
+        "Weather request failed: HTTP " + response.status
+      );
+    }
+
+    const data = await response.json();
+
+    selectedDropzone =
+      allDropzones.find(
+        item => item.id === data.dropzone.id
+      ) || selectedDropzone;
+
+    if (selectedDropzone) {
+      selectedDropzone.ground_elevation_ft =
+        data.dropzone.ground_elevation_ft;
+    }
+
+    updateAltitude();
+    renderJumpWind(data);
+    renderCurrent(data);
+    renderHours(data);
+    renderMetar(data);
+
+  } catch (error) {
+    console.error(error);
+
+    jumpWindEl.innerHTML = `
+      <div class="error">Could not load live weather.</div>
+    `;
+
+    currentEl.innerHTML = `
+      <div class="error">
+        Weather data is temporarily unavailable.
+      </div>
+    `;
+
+    hoursEl.innerHTML = `
+      <div class="error">
+        Hourly forecast is temporarily unavailable.
+      </div>
+    `;
+
+    metarEl.innerHTML = `
+      <div class="muted">
+        Aviation observation unavailable.
+      </div>
+    `;
+  }
+}
+
+async function loadDropzones() {
+  try {
+    const response = await fetch("/api/dropzones", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        "Drop zone directory failed: HTTP " + response.status
+      );
+    }
+
+    const data = await response.json();
+
+    allDropzones = Array.isArray(data.dropzones)
+      ? data.dropzones
+      : [];
+
+    dzMetaEl.textContent =
+      `${data.count || allDropzones.length} current North American USPA-affiliated locations`;
+
+    renderDropzoneOptions();
+
+    await loadWeather();
+
+  } catch (error) {
+    console.error(error);
+
+    dzEl.innerHTML = `
+      <option value="">Could not load drop zone directory</option>
+    `;
+
+    dzMetaEl.textContent =
+      "The USPA directory could not be loaded. Please refresh the page.";
+  }
+}
+
+dzEl.addEventListener("change", () => {
+  updateSelectedDropzone();
+  loadWeather();
+});
+
+dzSearchEl.addEventListener("input", () => {
+  renderDropzoneOptions(dzSearchEl.value);
+});
+
+altEl.addEventListener("change", () => {
+  updateAltitude();
+  loadWeather();
+});
+
+altEl.addEventListener("input", updateAltitude);
+
+loadDropzones();
 </script>
 </body>
 </html>
