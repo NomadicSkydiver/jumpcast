@@ -774,39 +774,20 @@ function findCurrentForecastIndex(times, timeZone) {
   }
 
   const nowKey =
-    wallClockKeyInTimeZone(timeZone || "UTC");
+    wallClockKeyInTimeZone(timeZone || "UTC").slice(0, 13);
 
   let bestIndex = 0;
-  let bestDifference = Infinity;
 
-  times.forEach((time, index) => {
-    const difference =
-      Math.abs(
-        String(time).slice(0, 16).localeCompare(
-          nowKey.slice(0, 16)
-        )
-      );
+  for (let i = 0; i < times.length; i++) {
+    const forecastKey =
+      String(times[i]).slice(0, 13);
 
-    const a =
-      String(time).slice(0, 16);
-
-    const b =
-      nowKey.slice(0, 16);
-
-    const numericDifference =
-      Math.abs(
-        Date.parse(a + ":00") -
-        Date.parse(b + ":00")
-      );
-
-    if (
-      Number.isFinite(numericDifference) &&
-      numericDifference < bestDifference
-    ) {
-      bestDifference = numericDifference;
-      bestIndex = index;
+    if (forecastKey <= nowKey) {
+      bestIndex = i;
+    } else {
+      break;
     }
-  });
+  }
 
   return bestIndex;
 }
@@ -1509,9 +1490,24 @@ function renderHours(data) {
     return;
   }
 
+  /*
+    The server series begins with the current forecast hour.
+    "Next 12 Hours" should show the following 12 hours,
+    not repeat the current hour.
+  */
+  const nextHours =
+    series.slice(1, 13);
+
   hoursEl.innerHTML = "";
 
-  series.forEach(item => {
+  if (!nextHours.length) {
+    hoursEl.innerHTML =
+      '<div class="muted">No future hourly forecast is available.</div>';
+
+    return;
+  }
+
+  nextHours.forEach(item => {
     const row =
       document.createElement("div");
 
