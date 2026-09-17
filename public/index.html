@@ -22,33 +22,33 @@
     .app {
       width: 100%;
       max-width: 620px;
-      margin: 0 auto;
-      padding: 24px 18px 40px;
+      margin: auto;
+      padding: 24px 18px 50px;
     }
 
     .logo {
-      font-size: 34px;
+      font-size: 36px;
       font-weight: 800;
-      margin: 10px 0 6px;
+      margin: 8px 0 4px;
     }
 
     .tagline {
       color: #9eabbc;
       font-size: 15px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .card {
       background: #101c2d;
-      border: 1px solid #23344b;
+      border: 1px solid #263850;
       border-radius: 18px;
       padding: 18px;
       margin-bottom: 16px;
     }
 
     h2 {
-      font-size: 18px;
-      margin: 0 0 14px;
+      font-size: 19px;
+      margin: 0 0 15px;
     }
 
     label {
@@ -61,111 +61,885 @@
     select,
     input {
       width: 100%;
-      border: 1px solid #31445e;
+      border: 1px solid #344963;
       border-radius: 12px;
-      background: #0a1525;
+      background: #091526;
       color: #fff;
-      padding: 13px;
+      padding: 14px;
       font-size: 16px;
+      outline: none;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: #6d8fb8;
+    }
+
+    .alt-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: #9eabbc;
+      font-size: 13px;
+    }
+
+    .big-wind {
+      font-size: 38px;
+      font-weight: 800;
+      margin: 5px 0;
+    }
+
+    .wind-direction {
+      color: #aeb9c8;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      background: #0a1627;
+      border: 1px solid #22364f;
+      border-radius: 13px;
+      padding: 13px;
+    }
+
+    .metric-title {
+      color: #8f9eb1;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .hours {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .hour {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #0a1627;
+      border: 1px solid #22364f;
+    }
+
+    .hour-time {
+      min-width: 58px;
+      font-weight: 700;
+    }
+
+    .hour-wind {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .hour-sub {
+      color: #8f9eb1;
+      font-size: 12px;
+      margin-top: 3px;
     }
 
     .status {
-      font-size: 17px;
       line-height: 1.5;
+      font-size: 16px;
+    }
+
+    .success {
+      color: #a9d6b1;
+    }
+
+    .error {
+      color: #ff9d9d;
     }
 
     .muted {
       color: #9eabbc;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .source {
+      color: #738399;
+      font-size: 11px;
       line-height: 1.5;
+      margin-top: 14px;
     }
 
     .footer {
       text-align: center;
       color: #66758a;
       font-size: 12px;
-      margin-top: 28px;
+      margin-top: 25px;
+    }
+
+    .loading {
+      color: #aeb9c8;
+    }
+
+    @media (max-width: 400px) {
+      .weather-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .big-wind {
+        font-size: 34px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <main class="app">
+<main class="app">
 
-    <div class="logo">JumpCast</div>
+  <div class="logo">JumpCast</div>
 
-    <div class="tagline">
-      Skydiving weather information at a glance.
+  <div class="tagline">
+    Skydiving weather information at a glance.
+  </div>
+
+  <section class="card">
+
+    <h2>Drop Zone</h2>
+
+    <label for="dz">Select a drop zone</label>
+
+    <select id="dz">
+      <option value="Skydive Midwest">Skydive Midwest</option>
+      <option value="Skydive Chicago">Skydive Chicago</option>
+      <option value="Skydive Sebastian">Skydive Sebastian</option>
+    </select>
+
+  </section>
+
+  <section class="card">
+
+    <h2>Jump Altitude</h2>
+
+    <label for="alt">Altitude MSL (feet)</label>
+
+    <input
+      id="alt"
+      type="number"
+      value="12500"
+      min="1000"
+      max="20000"
+      step="500"
+    >
+
+    <div class="alt-info">
+      <span>MSL: <strong id="msl">12,500 ft</strong></span>
+      <span>AGL: <strong id="agl">—</strong></span>
     </div>
 
-    <section class="card">
-      <h2>Drop Zone</h2>
+  </section>
 
-      <label for="dz">
-        Select a drop zone
-      </label>
+  <section class="card">
 
-      <select id="dz">
-        <option>Skydive Midwest</option>
-        <option>Skydive Chicago</option>
-        <option>Skydive Sebastian</option>
-      </select>
-    </section>
+    <h2>Wind at Jump Altitude</h2>
 
-    <section class="card">
-      <h2>Jump Altitude</h2>
+    <div id="jumpWind">
+      <div class="loading">Loading live conditions...</div>
+    </div>
 
-      <label for="alt">
-        Altitude MSL (feet)
-      </label>
+  </section>
 
-      <input
-        id="alt"
-        type="number"
-        value="12500"
-        min="1000"
-        max="20000"
-        step="500"
-      >
-    </section>
+  <section class="card">
 
-    <section class="card">
-      <h2>Live Conditions</h2>
+    <h2>Current Conditions</h2>
 
-      <div class="status">
-        JumpCast is loading.
+    <div id="current">
+
+      <div class="loading">
+        Loading current conditions...
       </div>
 
-      <p class="muted">
-        We're confirming the basic website is working before adding
-        the live weather display.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>Community Reports</h2>
-
-      <p class="muted">
-        Community reports will appear here in a future update.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>Safety &amp; Data Note</h2>
-
-      <p class="muted">
-        JumpCast provides weather information and model-derived wind
-        estimates. It does not authorize a jump or replace the DZ's
-        operating decision, pilot or instructor judgment, applicable
-        regulations, or current local observations.
-      </p>
-    </section>
-
-    <div class="footer">
-      JumpCast • Weather information for skydivers
     </div>
 
-  </main>
+  </section>
+
+  <section class="card">
+
+    <h2>Next 12 Hours</h2>
+
+    <div id="hours">
+
+      <div class="loading">
+        Loading hourly forecast...
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <h2>Altitude Calculation</h2>
+
+    <p id="altitudeNote" class="muted">
+      Wind is being calculated for your selected MSL altitude.
+    </p>
+
+  </section>
+
+  <section class="card">
+
+    <h2>Aviation Observation</h2>
+
+    <div id="metar">
+
+      <div class="loading">
+        Loading aviation observation...
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <h2>Community Reports</h2>
+
+    <p class="muted">
+      Community reports will appear here in a future update.
+    </p>
+
+  </section>
+
+  <section class="card">
+
+    <h2>Safety &amp; Data Note</h2>
+
+    <p class="muted">
+      JumpCast provides weather information and model-derived wind
+      estimates. It does not authorize a jump or replace the DZ's
+      operating decision, pilot or instructor judgment, applicable
+      regulations, or current local observations.
+    </p>
+
+  </section>
+
+  <div class="footer">
+    JumpCast • Weather information for skydivers
+  </div>
+
+</main>
+
+<script>
+
+const dzEl = document.getElementById("dz");
+const altEl = document.getElementById("alt");
+
+const mslEl = document.getElementById("msl");
+const aglEl = document.getElementById("agl");
+
+const jumpWindEl = document.getElementById("jumpWind");
+const currentEl = document.getElementById("current");
+const hoursEl = document.getElementById("hours");
+const altitudeNoteEl = document.getElementById("altitudeNote");
+const metarEl = document.getElementById("metar");
+
+
+function number(value, decimals = 0) {
+
+  if (value === null || value === undefined) {
+    return "—";
+  }
+
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) {
+    return "—";
+  }
+
+  return n.toFixed(decimals);
+}
+
+
+function formatNumber(value) {
+
+  if (value === null || value === undefined) {
+    return "—";
+  }
+
+  const n = Number(value);
+
+  if (!Number.isFinite(n)) {
+    return "—";
+  }
+
+  return Math.round(n).toLocaleString();
+}
+
+
+function directionName(degrees) {
+
+  if (degrees === null || degrees === undefined) {
+    return "—";
+  }
+
+  const dirs = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW"
+  ];
+
+  const n = Number(degrees);
+
+  if (!Number.isFinite(n)) {
+    return "—";
+  }
+
+  const index = Math.round(n / 22.5) % 16;
+
+  return dirs[index];
+}
+
+
+function formatTime(time) {
+
+  if (!time) {
+    return "—";
+  }
+
+  const date = new Date(time);
+
+  if (Number.isNaN(date.getTime())) {
+    return time;
+  }
+
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+
+function formatDateTime(time) {
+
+  if (!time) {
+    return "—";
+  }
+
+  const date = new Date(time);
+
+  if (Number.isNaN(date.getTime())) {
+    return time;
+  }
+
+  return date.toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+
+function updateAltitude() {
+
+  const altitude =
+    Number(altEl.value) || 12500;
+
+  const dzName = dzEl.value;
+
+  const elevations = {
+    "Skydive Midwest": 626,
+    "Skydive Chicago": 712,
+    "Skydive Sebastian": 23
+  };
+
+  const elevation =
+    elevations[dzName] || 0;
+
+  const agl =
+    Math.max(0, altitude - elevation);
+
+  mslEl.textContent =
+    formatNumber(altitude) + " ft";
+
+  aglEl.textContent =
+    formatNumber(agl) + " ft";
+}
+
+
+function renderJumpWind(data) {
+
+  const wind = data.jumpWind;
+
+  if (!wind) {
+
+    jumpWindEl.innerHTML =
+      '<div class="error">Jump-altitude wind is unavailable.</div>';
+
+    return;
+  }
+
+  const speed =
+    number(wind.speed_kt, 1);
+
+  const direction =
+    number(wind.direction_deg, 0);
+
+  const dirName =
+    directionName(wind.direction_deg);
+
+  jumpWindEl.innerHTML = `
+
+    <div class="big-wind">
+      ${speed} kt
+    </div>
+
+    <div class="wind-direction">
+      From ${direction}° (${dirName})
+    </div>
+
+    <div class="weather-grid">
+
+      <div class="metric">
+        <div class="metric-title">
+          Target altitude
+        </div>
+        <div class="metric-value">
+          ${formatNumber(data.jumpAltitude.msl_ft)} ft MSL
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Above ground
+        </div>
+        <div class="metric-value">
+          ${formatNumber(data.jumpAltitude.agl_ft)} ft AGL
+        </div>
+      </div>
+
+    </div>
+
+    <div class="source">
+      ${wind.method || "Altitude-adjusted wind estimate"}
+    </div>
+  `;
+
+  altitudeNoteEl.textContent =
+    "JumpCast is using the weather model's pressure-level wind data and geopotential heights to estimate wind at the selected MSL altitude.";
+}
+
+
+function renderCurrent(data) {
+
+  const forecast =
+    data.forecast;
+
+  if (!forecast || !forecast.hourly) {
+
+    currentEl.innerHTML =
+      '<div class="error">Current forecast data is unavailable.</div>';
+
+    return;
+  }
+
+  const h =
+    forecast.hourly;
+
+  if (!h.time || !h.time.length) {
+
+    currentEl.innerHTML =
+      '<div class="error">Current conditions are unavailable.</div>';
+
+    return;
+  }
+
+  let index = 0;
+
+  const now = Date.now();
+
+  let best =
+    Infinity;
+
+  h.time.forEach((time, i) => {
+
+    const difference =
+      Math.abs(new Date(time).getTime() - now);
+
+    if (difference < best) {
+      best = difference;
+      index = i;
+    }
+
+  });
+
+  const temp =
+    h.temperature_2m?.[index];
+
+  const cloud =
+    h.cloud_cover?.[index];
+
+  const visibilityKm =
+    h.visibility?.[index];
+
+  const visibilityMiles =
+    visibilityKm === null ||
+    visibilityKm === undefined
+      ? null
+      : Number(visibilityKm) * 0.621371;
+
+  const precip =
+    h.precipitation_probability?.[index];
+
+  const wind =
+    h.wind_speed_10m?.[index];
+
+  const gust =
+    h.wind_gusts_10m?.[index];
+
+  const windDir =
+    h.wind_direction_10m?.[index];
+
+  currentEl.innerHTML = `
+
+    <div class="weather-grid">
+
+      <div class="metric">
+        <div class="metric-title">
+          Temperature
+        </div>
+        <div class="metric-value">
+          ${number(temp, 0)}°F
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Surface wind
+        </div>
+        <div class="metric-value">
+          ${number(wind, 0)} kt
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Wind gusts
+        </div>
+        <div class="metric-value">
+          ${number(gust, 0)} kt
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Wind direction
+        </div>
+        <div class="metric-value">
+          ${number(windDir, 0)}°
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Cloud cover
+        </div>
+        <div class="metric-value">
+          ${number(cloud, 0)}%
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Visibility
+        </div>
+        <div class="metric-value">
+          ${number(visibilityMiles, 1)} mi
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Precipitation chance
+        </div>
+        <div class="metric-value">
+          ${number(precip, 0)}%
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-title">
+          Observation time
+        </div>
+        <div class="metric-value">
+          ${formatTime(h.time[index])}
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+
+function renderHours(data) {
+
+  const series =
+    data.jumpWindSeries;
+
+  if (!series || !series.length) {
+
+    hoursEl.innerHTML =
+      '<div class="error">Hourly wind forecast is unavailable.</div>';
+
+    return;
+  }
+
+  hoursEl.innerHTML = "";
+
+  series.forEach((item) => {
+
+    const speed =
+      number(item.speed_kt, 1);
+
+    const direction =
+      number(item.direction_deg, 0);
+
+    const dir =
+      directionName(item.direction_deg);
+
+    const row =
+      document.createElement("div");
+
+    row.className = "hour";
+
+    row.innerHTML = `
+
+      <div>
+        <div class="hour-time">
+          ${formatTime(item.time)}
+        </div>
+
+        <div class="hour-sub">
+          From ${direction}° (${dir})
+        </div>
+      </div>
+
+      <div class="hour-wind">
+        ${speed} kt
+      </div>
+
+    `;
+
+    hoursEl.appendChild(row);
+
+  });
+}
+
+
+function renderMetar(data) {
+
+  const metar =
+    Array.isArray(data.metar)
+      ? data.metar
+      : [];
+
+  if (!metar.length) {
+
+    metarEl.innerHTML = `
+
+      <div class="muted">
+        No recent aviation observation was returned for this
+        drop zone.
+      </div>
+
+    `;
+
+    return;
+  }
+
+  const latest =
+    metar[metar.length - 1];
+
+  let raw = "";
+
+  if (typeof latest === "string") {
+
+    raw = latest;
+
+  } else if (latest && latest.rawOb) {
+
+    raw = latest.rawOb;
+
+  } else if (latest && latest.raw) {
+
+    raw = latest.raw;
+
+  } else {
+
+    raw = JSON.stringify(latest);
+  }
+
+  metarEl.innerHTML = `
+
+    <div class="metric">
+
+      <div class="metric-title">
+        Latest aviation observation
+      </div>
+
+      <div class="metric-value">
+        ${raw}
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+async function loadWeather() {
+
+  updateAltitude();
+
+  const dz =
+    dzEl.value;
+
+  const altitude =
+    Number(altEl.value) || 12500;
+
+  jumpWindEl.innerHTML =
+    '<div class="loading">Loading live conditions...</div>';
+
+  currentEl.innerHTML =
+    '<div class="loading">Loading current conditions...</div>';
+
+  hoursEl.innerHTML =
+    '<div class="loading">Loading hourly forecast...</div>';
+
+  metarEl.innerHTML =
+    '<div class="loading">Loading aviation observation...</div>';
+
+  try {
+
+    const url =
+      "/api/weather?dz=" +
+      encodeURIComponent(dz) +
+      "&alt=" +
+      encodeURIComponent(altitude);
+
+    const controller =
+      new AbortController();
+
+    const timeout =
+      setTimeout(() => {
+        controller.abort();
+      }, 30000);
+
+    const response =
+      await fetch(url, {
+        cache: "no-store",
+        signal: controller.signal
+      });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Weather request failed: HTTP " +
+        response.status
+      );
+    }
+
+    const data =
+      await response.json();
+
+    renderJumpWind(data);
+    renderCurrent(data);
+    renderHours(data);
+    renderMetar(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+    jumpWindEl.innerHTML = `
+      <div class="error">
+        Could not load live weather.
+      </div>
+    `;
+
+    currentEl.innerHTML = `
+      <div class="error">
+        Weather data is temporarily unavailable.
+      </div>
+    `;
+
+    hoursEl.innerHTML = `
+      <div class="error">
+        Hourly forecast is temporarily unavailable.
+      </div>
+    `;
+
+    metarEl.innerHTML = `
+      <div class="muted">
+        Aviation observation unavailable.
+      </div>
+    `;
+  }
+}
+
+
+dzEl.addEventListener("change", () => {
+
+  updateAltitude();
+  loadWeather();
+
+});
+
+
+altEl.addEventListener("change", () => {
+
+  updateAltitude();
+  loadWeather();
+
+});
+
+
+altEl.addEventListener("input", () => {
+
+  updateAltitude();
+
+});
+
+
+updateAltitude();
+loadWeather();
+
+</script>
 
 </body>
 </html>
