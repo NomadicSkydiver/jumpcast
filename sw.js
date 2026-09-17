@@ -1,4 +1,5 @@
-const CACHE_NAME = "jumpcast-v1";
+const CACHE_NAME = "jumpcast-v2";
+
 const APP_SHELL = [
   "/",
   "/profile.js",
@@ -29,9 +30,7 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
-  // Never cache live weather/API responses.
   if (url.pathname.startsWith("/api/")) return;
-
   if (event.request.method !== "GET") return;
 
   event.respondWith(
