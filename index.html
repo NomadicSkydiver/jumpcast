@@ -6,6 +6,111 @@
   <meta name="theme-color" content="#07111f">
   <link rel="manifest" href="/manifest.webmanifest">
   <title>JumpCast</title>
+  /* ===== JumpCast Glass Desktop Theme ===== */
+
+body {
+  background:
+    linear-gradient(
+      rgba(4, 14, 30, 0.28),
+      rgba(4, 14, 30, 0.28)
+    ),
+    url("/jumpcast_background_desktop.jpg")
+      center center / cover fixed;
+}
+
+.app {
+  max-width: 920px;
+  padding: 70px 24px 70px;
+}
+
+.logo {
+  text-align: center;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin: 20px 0 4px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.tagline {
+  text-align: center;
+  color: #b8d9f5;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 34px;
+  text-transform: uppercase;
+}
+
+.card {
+  background: rgba(7, 28, 52, 0.72);
+  border: 1px solid rgba(110, 190, 255, 0.45);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.card h2 {
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+select,
+input {
+  background: rgba(4, 18, 36, 0.82);
+  border: 1px solid rgba(105, 180, 235, 0.45);
+}
+
+.metric,
+.hour,
+.nearby-item {
+  background: rgba(4, 18, 36, 0.68);
+  border: 1px solid rgba(80, 160, 220, 0.28);
+}
+
+.favorite-button,
+.remove-favorite-button,
+.nearby-button,
+.nearby-use {
+  background: rgba(5, 23, 43, 0.72);
+  border-color: rgba(105, 180, 235, 0.5);
+}
+
+@media (min-width: 801px) {
+  .settings-grid {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    background:
+      linear-gradient(
+        rgba(4, 14, 30, 0.42),
+        rgba(4, 14, 30, 0.42)
+      ),
+      url("/jumpcast_background_desktop.jpg")
+        center center / cover fixed;
+  }
+
+  .app {
+    padding: 35px 14px 50px;
+  }
+
+  .logo {
+    font-size: 44px;
+  }
+
+  .tagline {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+}
   <style>
     * { box-sizing: border-box; }
     body {
