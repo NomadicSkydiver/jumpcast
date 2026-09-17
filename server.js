@@ -630,7 +630,11 @@ app.get("/profile.js",(req,res)=>{
     path.join(__dirname,"profile.js")
   );
 });
-
+app.get("/jumpcast_background_desktop.jpg",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"jumpcast_background_desktop.jpg")
+  );
+});
 app.get("/jumpcast-icon-192.png",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"jumpcast-icon-192.png")
