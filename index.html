@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>JumpCast V2</title>
+<style>
+:root{--bg:#07111f;--card:#0d1b2d;--muted:#91a4ba;--text:#f5f8fc;--accent:#65d6ff;--good:#65e6a2;--warn:#ffd166;--bad:#ff6b6b;--line:#1b3048}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#07111f,#0a1728 55%,#07111f);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 16px 34px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:950;font-size:27px}.brand span{color:var(--accent)}.tag{font-size:11px;color:var(--muted);margin-top:2px}.card{background:#0d1b2df2;border:1px solid var(--line);border-radius:20px;padding:17px;margin:12px 0}.label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:850}.selectrow{display:flex;gap:9px;margin-top:9px}.selectrow select,.selectrow input{flex:1;background:#14263c;color:white;border:1px solid var(--line);border-radius:12px;padding:12px}.hero{display:flex;justify-content:space-between;align-items:center}.status{font-weight:950;font-size:16px;margin-top:5px}.status.good{color:var(--good)}.status.warn{color:var(--warn)}.status.bad{color:var(--bad)}.score{font-size:38px;font-weight:950}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.metric{background:#0a1728;border-radius:14px;padding:12px}.metric b{display:block;font-size:19px;margin-top:4px}.metric small{color:var(--muted)}.row{display:flex;justify-content:space-between;gap:10px}.hours{display:flex;gap:8px;overflow:auto}.hour{min-width:78px;background:#0a1728;border-radius:13px;padding:10px;text-align:center}.hour b{display:block;margin:6px 0}.hour small{color:var(--muted)}.bar{height:9px;background:#17304a;border-radius:20px;overflow:hidden}.fill{height:100%;background:var(--good);width:70%}.button{border:0;border-radius:12px;background:#14263c;color:white;padding:10px 13px;font-weight:800}.note{font-size:11px;line-height:1.5;color:var(--muted)}.source{font-size:10px;color:var(--muted);margin-top:9px}.loading{color:var(--muted);padding:18px 0}.error{color:var(--bad);font-size:13px}.nav{position:sticky;bottom:10px;display:flex;justify-content:space-around;background:#0b192aeb;border:1px solid var(--line);border-radius:18px;padding:8px;backdrop-filter:blur(12px)}.nav button{background:transparent;border:0;color:var(--muted);font-weight:800}.nav .active{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div><div class="brand">🪂 Jump<span>Cast</span></div><div class="tag">Skydiving weather, built for jumpers</div></div>
+    <button class="button" onclick="load()">↻</button>
+  </div>
+
+  <div class="card">
+    <div class="label">Drop zone</div>
+    <div class="selectrow">
+      <select id="dz"></select>
+      <input id="alt" type="number" value="12500" min="1000" max="20000" step="500" aria-label="Jump altitude">
+    </div>
+    <div class="tag" style="margin-top:7px">Jump altitude (ft MSL) • prototype</div>
+  </div>
+
+  <div id="main"><div class="card loading">Loading live conditions…</div></div>
+
+  <div class="card">
+    <div class="label">Community reports</div>
+    <div class="note" style="margin-top:7px">Coming next: moderated DZ reports for surface wind, clouds, rain and “currently jumping” status.</div>
+  </div>
+
+  <div class="card">
+    <div class="label">Safety / data note</div>
+    <div class="note" style="margin-top:7px">JumpCast presents weather information; it does not authorize a jump or replace the DZ's operating decision, pilot/instructor judgment, applicable regulations, or current local observations.</div>
+    <div class="source">Live forecast: Open-Meteo • Aviation observation: NOAA Aviation Weather Center</div>
+  </div>
+
+  <div class="nav"><button class="active">🏠 Home</button><button>📍 DZs</button><button>📈 Forecast</button><button>⚙️ Profile</button></div>
+
+  <footer style="text-align:center;padding:12px 6px 0;color:var(--muted);font-size:11px;line-height:1.5">App created by Timothy Howell<br>Website created by Timothy Howell</footer>
+</div>
+
+<script>
+let dzData={};
+const $=id=>document.getElementById(id);
+async function init(){
+  dzData=await fetch('/api/dropzones').then(r=>r.json());
+  $('dz').innerHTML=Object.keys(dzData).map(n=>`<option>${n}</option>`).join('');
+  $('dz').onchange=load; $('alt').onchange=load; load();
+}
+function mphToKn(x){return x}
+function fmt(x){return x==null?'—':Math.round(x)}
+function windLabel(dir){if(dir==null)return '—';const a=['N','NE','E','SE','S','SW','W','NW'];return a[Math.round(dir/45)%8]}
+function render(d){
+  const h=d.forecast.hourly, now=new Date();
+  let i=0, best=Infinity;
+  h.time.forEach((t,j)=>{let diff=Math.abs(new Date(t)-now);if(diff<best){best=diff;i=j}});
+  const w=h.wind_speed_10m?.[i], g=h.wind_gusts_10m?.[i], dir=h.wind_direction_10m?.[i];
+  const rain=h.precipitation_probability?.[i], cloud=h.cloud_cover?.[i], vis=h.visibility?.[i];
+  const w900=h.wind_speed_900hPa?.[i], d900=h.wind_direction_900hPa?.[i];
+  const w700=h.wind_speed_700hPa?.[i], d700=h.wind_direction_700hPa?.[i];
+  let score=10; if(w>18)score-=2; if(g>25)score-=2; if(rain>40)score-=2; if(cloud>90)score-=2; if(vis<8000)score-=2;
+  score=Math.max(0,Math.min(10,score));
+  const cls=score>=7?'good':score>=4?'warn':'bad', text=score>=7?'CONDITIONS LOOK FAVORABLE':score>=4?'CONDITIONS TO WATCH':'CONDITIONS MAY BE LIMITING';
+  let hours=''; for(let j=i;j<Math.min(i+8,h.time.length);j++){hours+=`<div class="hour"><small>${new Date(h.time[j]).toLocaleTimeString([], {hour:'numeric'})}</small><b>${fmt(h.wind_speed_10m[j])} kt</b><small>${fmt(h.precipitation_probability[j])}% rain</small></div>`}
+  $('main').innerHTML=`
+  <div class="card"><div class="hero"><div><div class="label">Live conditions</div><div class="status ${cls}">● ${text}</div><div class="tag">${d.dropzone.name} • ${new Date(h.time[i]).toLocaleString()}</div></div><div class="score">${score.toFixed(1)}<span style="font-size:13px;color:var(--muted)">/10</span></div></div>
+  <div class="grid">
+    <div class="metric"><small>Surface wind</small><b>${fmt(w)} kt</b><small>${windLabel(dir)} • gust ${fmt(g)} kt</small></div>
+    <div class="metric"><small>Cloud cover</small><b>${fmt(cloud)}%</b><small>Model cloud fraction</small></div>
+    <div class="metric"><small>Visibility</small><b>${vis==null?'—':(vis/1609).toFixed(1)+' mi'}</b><small>Forecast visibility</small></div>
+    <div class="metric"><small>Rain chance</small><b>${fmt(rain)}%</b><small>Current forecast hour</small></div>
+  </div>
+  <div class="card" style="margin:12px 0 0;padding:14px;background:#0a1728"><div class="row"><div><div class="label">Winds aloft proxy</div><b>~3,000 ft: ${fmt(w900)} kt ${windLabel(d900)}</b></div><div style="text-align:right"><div class="label">~10,000 ft</div><b>${fmt(w700)} kt ${windLabel(d700)}</b></div></div><div class="note" style="margin-top:8px">Pressure-level model winds are approximate altitude proxies; production JumpCast should use dedicated aviation wind products for exact jump-altitude calculations.</div></div>
+  </div>
+  <div class="card"><div class="label">Next hours</div><div class="hours" style="margin-top:11px">${hours}</div></div>
+  <div class="card"><div class="label">Aviation observation</div><div class="note" style="margin-top:8px">${d.metar?.[0]?.rawOb || 'No recent METAR returned for this prototype DZ.'}</div></div>
+  <div class="source">Retrieved ${new Date(d.source.retrieved_at).toLocaleTimeString()}</div>`;
+}
+async function load(){
+  $('main').innerHTML='<div class="card loading">Loading live conditions…</div>';
+  try{
+    const name=$('dz').value||'Skydive Midwest';
+    const r=await fetch('/api/weather?dz='+encodeURIComponent(name));
+    if(!r.ok)throw new Error('Weather request failed');
+    render(await r.json());
+  }catch(e){$('main').innerHTML='<div class="card error">Could not load live weather. Check the server connection and try again.</div>'}
+}
+init();
+</script>
+</body>
+</html>
