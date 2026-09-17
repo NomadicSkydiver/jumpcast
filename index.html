@@ -95,6 +95,70 @@
       font-size: 12px;
       margin-top: 8px;
     }
+
+    .nearby-button {
+      width: 100%;
+      border: 1px solid #344963;
+      border-radius: 12px;
+      background: #091526;
+      color: #fff;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .nearby-button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+    .nearby-status {
+      color: #aeb9c8;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+    .nearby-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .nearby-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid #263850;
+      border-radius: 12px;
+      padding: 12px;
+      background: #0b1728;
+    }
+    .nearby-name {
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .nearby-location {
+      color: #9fb1c8;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .nearby-distance {
+      color: #a9d6b1;
+      font-size: 13px;
+      white-space: nowrap;
+      font-weight: 700;
+      margin-bottom: 7px;
+      text-align: right;
+    }
+    .nearby-use {
+      border: 1px solid #344963;
+      border-radius: 10px;
+      background: #101f34;
+      color: #fff;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
     .alt-info {
       display: flex;
       justify-content: space-between;
@@ -231,6 +295,18 @@
   </section>
 
   <section class="card">
+    <h2>Nearby Drop Zones</h2>
+    <p class="muted">
+      Find USPA-affiliated drop zones near your current location.
+    </p>
+    <button id="nearbyButton" class="nearby-button" type="button">
+      📍 Find Drop Zones Near Me
+    </button>
+    <div id="nearbyStatus" class="nearby-status"></div>
+    <div id="nearbyList" class="nearby-list"></div>
+  </section>
+
+  <section class="card">
     <h2>Jump Altitude</h2>
 
     <label for="alt">Altitude MSL (feet)</label>
@@ -308,6 +384,9 @@ const favoriteButtonEl = document.getElementById("favoriteButton");
 const favoriteStatusEl = document.getElementById("favoriteStatus");
 const favoritesEl = document.getElementById("favorites");
 const removeFavoriteButtonEl = document.getElementById("removeFavoriteButton");
+const nearbyButtonEl = document.getElementById("nearbyButton");
+const nearbyStatusEl = document.getElementById("nearbyStatus");
+const nearbyListEl = document.getElementById("nearbyList");
 const altEl = document.getElementById("alt");
 const mslEl = document.getElementById("msl");
 const aglEl = document.getElementById("agl");
@@ -468,6 +547,156 @@ function dzLocation(dz) {
     .join(", ");
 }
 
+function distanceMiles(lat1, lon1, lat2, lon2) {
+  const toRad = value => value * Math.PI / 180;
+  const earthRadiusMiles = 3958.7613;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) *
+    Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
+
+  return earthRadiusMiles * 2 * Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(1 - a)
+  );
+}
+
+function renderNearbyDropzones(userLat, userLon) {
+  const nearby = allDropzones
+    .filter(dz =>
+      Number.isFinite(Number(dz.lat)) &&
+      Number.isFinite(Number(dz.lon))
+    )
+    .map(dz => ({
+      dz,
+      distance: distanceMiles(
+        userLat,
+        userLon,
+        Number(dz.lat),
+        Number(dz.lon)
+      )
+    }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 10);
+
+  nearbyListEl.innerHTML = "";
+
+  if (!nearby.length) {
+    nearbyStatusEl.textContent =
+      "No drop zones with usable coordinates were found.";
+    return;
+  }
+
+  nearbyStatusEl.textContent =
+    "Showing the 10 closest locations based on straight-line distance.";
+
+  nearby.forEach(({ dz, distance }) => {
+    const item = document.createElement("div");
+    item.className = "nearby-item";
+
+    const info = document.createElement("div");
+    const name = document.createElement("div");
+    name.className = "nearby-name";
+    name.textContent = dz.name + (dz.city ? " — " + dz.city : "");
+
+    const location = document.createElement("div");
+    location.className = "nearby-location";
+    location.textContent = dzLocation(dz);
+
+    info.appendChild(name);
+    info.appendChild(location);
+
+    const actions = document.createElement("div");
+    const miles = document.createElement("div");
+    miles.className = "nearby-distance";
+    miles.textContent = distance < 10
+      ? distance.toFixed(1) + " mi"
+      : Math.round(distance).toLocaleString() + " mi";
+
+    const useButton = document.createElement("button");
+    useButton.type = "button";
+    useButton.className = "nearby-use";
+    useButton.textContent = "Use";
+    useButton.addEventListener("click", () => {
+      dzSearchEl.value = "";
+      renderDropzoneOptions("");
+      dzEl.value = dz.id;
+      updateSelectedDropzone();
+      loadWeather();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    actions.appendChild(miles);
+    actions.appendChild(useButton);
+
+    item.appendChild(info);
+    item.appendChild(actions);
+    nearbyListEl.appendChild(item);
+  });
+}
+
+function findNearbyDropzones() {
+  if (!allDropzones.length) {
+    nearbyStatusEl.textContent =
+      "The drop zone directory is still loading. Please try again.";
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    nearbyStatusEl.textContent =
+      "Location services are not supported by this browser.";
+    return;
+  }
+
+  nearbyButtonEl.disabled = true;
+  nearbyButtonEl.textContent = "📍 Finding nearby drop zones...";
+  nearbyStatusEl.textContent =
+    "Your browser will ask for permission to use your location.";
+  nearbyListEl.innerHTML = "";
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      renderNearbyDropzones(
+        position.coords.latitude,
+        position.coords.longitude
+      );
+      nearbyButtonEl.disabled = false;
+      nearbyButtonEl.textContent = "📍 Find Drop Zones Near Me";
+    },
+    error => {
+      console.error(error);
+
+      let message =
+        "We could not get your location. You can still use the drop-zone search above.";
+
+      if (error.code === 1) {
+        message =
+          "Location permission was denied. Allow location access in your browser settings, then try again.";
+      } else if (error.code === 2) {
+        message =
+          "Your location is currently unavailable. Please try again.";
+      } else if (error.code === 3) {
+        message =
+          "Location lookup timed out. Please try again.";
+      }
+
+      nearbyStatusEl.textContent = message;
+      nearbyButtonEl.disabled = false;
+      nearbyButtonEl.textContent = "📍 Find Drop Zones Near Me";
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 15000,
+      maximumAge: 300000
+    }
+  );
+}
+
 function renderDropzoneOptions(filter = "") {
   const query = filter.trim().toLowerCase();
 
@@ -559,434 +788,4 @@ function updateSelectedDropzone() {
   updateFavoriteButton();
 
   if (isFavorite(selectedDropzone.id)) {
-    favoritesEl.value = selectedDropzone.id;
-  } else {
-    favoritesEl.value = "";
-  }
-}
-
-function updateAltitude() {
-  const altitude = Number(altEl.value) || 12500;
-
-  mslEl.textContent =
-    formatNumber(altitude) + " ft";
-
-  const elevation =
-    selectedDropzone?.ground_elevation_ft;
-
-  if (Number.isFinite(Number(elevation))) {
-    aglEl.textContent =
-      formatNumber(
-        Math.max(0, altitude - Number(elevation))
-      ) + " ft";
-  } else {
-    aglEl.textContent = "—";
-  }
-}
-
-function renderJumpWind(data) {
-  const wind = data.jumpWind;
-
-  if (!wind) {
-    jumpWindEl.innerHTML =
-      '<div class="error">Jump-altitude wind is unavailable.</div>';
-    return;
-  }
-
-  const speed = number(wind.speed_kt, 1);
-  const direction = number(wind.direction_deg, 0);
-  const dirName = directionName(wind.direction_deg);
-
-  const groundElevation =
-    data.dropzone.ground_elevation_ft;
-
-  aglEl.textContent =
-    formatNumber(data.jumpAltitude.agl_ft) + " ft";
-
-  jumpWindEl.innerHTML = `
-    <div class="big-wind">${speed} kt</div>
-
-    <div class="wind-direction">
-      From ${direction}° (${dirName})
-    </div>
-
-    <div class="weather-grid">
-      <div class="metric">
-        <div class="metric-title">Target altitude</div>
-        <div class="metric-value">
-          ${formatNumber(data.jumpAltitude.msl_ft)} ft MSL
-        </div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Above ground</div>
-        <div class="metric-value">
-          ${formatNumber(data.jumpAltitude.agl_ft)} ft AGL
-        </div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">DZ elevation</div>
-        <div class="metric-value">
-          ${formatNumber(groundElevation)} ft MSL
-        </div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">ICAO / METAR</div>
-        <div class="metric-value">
-          ${data.dropzone.icao || "Unavailable"}
-        </div>
-      </div>
-    </div>
-
-    <div class="source">
-      ${wind.method || "Altitude-adjusted wind estimate"}
-    </div>
-  `;
-
-  altitudeNoteEl.textContent =
-    "JumpCast uses pressure-level wind data and geopotential heights to estimate wind at the selected MSL altitude. DZ elevation is taken from the weather model when an exact elevation is not available in the directory.";
-}
-
-function renderCurrent(data) {
-  const forecast = data.forecast;
-
-  if (!forecast || !forecast.hourly) {
-    currentEl.innerHTML =
-      '<div class="error">Current forecast data is unavailable.</div>';
-    return;
-  }
-
-  const h = forecast.hourly;
-
-  if (!h.time || !h.time.length) {
-    currentEl.innerHTML =
-      '<div class="error">Current conditions are unavailable.</div>';
-    return;
-  }
-
-  let index = 0;
-  const now = Date.now();
-  let best = Infinity;
-
-  h.time.forEach((time, i) => {
-    const difference =
-      Math.abs(new Date(time).getTime() - now);
-
-    if (difference < best) {
-      best = difference;
-      index = i;
-    }
-  });
-
-  const temp = h.temperature_2m?.[index];
-  const cloud = h.cloud_cover?.[index];
-  const visibilityKm = h.visibility?.[index];
-
-  const visibilityMiles =
-    visibilityKm === null ||
-    visibilityKm === undefined
-      ? null
-      : Number(visibilityKm) * 0.621371;
-
-  const precip =
-    h.precipitation_probability?.[index];
-
-  const wind = h.wind_speed_10m?.[index];
-  const gust = h.wind_gusts_10m?.[index];
-  const windDir = h.wind_direction_10m?.[index];
-
-  currentEl.innerHTML = `
-    <div class="weather-grid">
-      <div class="metric">
-        <div class="metric-title">Temperature</div>
-        <div class="metric-value">${number(temp, 0)}°F</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Surface wind</div>
-        <div class="metric-value">${number(wind, 0)} kt</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Wind gusts</div>
-        <div class="metric-value">${number(gust, 0)} kt</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Wind direction</div>
-        <div class="metric-value">${number(windDir, 0)}°</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Cloud cover</div>
-        <div class="metric-value">${number(cloud, 0)}%</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Visibility</div>
-        <div class="metric-value">${number(visibilityMiles, 1)} mi</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Precipitation chance</div>
-        <div class="metric-value">${number(precip, 0)}%</div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-title">Forecast time</div>
-        <div class="metric-value">${formatTime(h.time[index])}</div>
-      </div>
-    </div>
-  `;
-}
-
-function renderHours(data) {
-  const series = data.jumpWindSeries;
-
-  if (!series || !series.length) {
-    hoursEl.innerHTML =
-      '<div class="error">Hourly wind forecast is unavailable.</div>';
-    return;
-  }
-
-  hoursEl.innerHTML = "";
-
-  series.forEach(item => {
-    const speed = number(item.speed_kt, 1);
-    const direction = number(item.direction_deg, 0);
-    const dir = directionName(item.direction_deg);
-
-    const row = document.createElement("div");
-    row.className = "hour";
-
-    row.innerHTML = `
-      <div>
-        <div class="hour-time">${formatTime(item.time)}</div>
-        <div class="hour-sub">
-          From ${direction}° (${dir})
-        </div>
-      </div>
-
-      <div class="hour-wind">${speed} kt</div>
-    `;
-
-    hoursEl.appendChild(row);
-  });
-}
-
-function renderMetar(data) {
-  const metar =
-    Array.isArray(data.metar) ? data.metar : [];
-
-  if (!metar.length) {
-    metarEl.innerHTML = `
-      <div class="muted">
-        No recent aviation observation was returned for this drop zone.
-        Some locations do not have a METAR station.
-      </div>
-    `;
-    return;
-  }
-
-  const latest = metar[metar.length - 1];
-
-  let raw = "";
-
-  if (typeof latest === "string") {
-    raw = latest;
-  } else if (latest && latest.rawOb) {
-    raw = latest.rawOb;
-  } else if (latest && latest.raw) {
-    raw = latest.raw;
-  } else {
-    raw = JSON.stringify(latest);
-  }
-
-  metarEl.innerHTML = `
-    <div class="metric">
-      <div class="metric-title">Latest aviation observation</div>
-      <div class="metric-value">${raw}</div>
-    </div>
-  `;
-}
-
-async function loadWeather() {
-  updateAltitude();
-
-  const dz = dzEl.value;
-  const altitude = Number(altEl.value) || 12500;
-
-  if (!dz) return;
-
-  jumpWindEl.innerHTML =
-    '<div class="loading">Loading live conditions...</div>';
-
-  currentEl.innerHTML =
-    '<div class="loading">Loading current conditions...</div>';
-
-  hoursEl.innerHTML =
-    '<div class="loading">Loading hourly forecast...</div>';
-
-  metarEl.innerHTML =
-    '<div class="loading">Loading aviation observation...</div>';
-
-  try {
-    const url =
-      "/api/weather?dz=" +
-      encodeURIComponent(dz) +
-      "&alt=" +
-      encodeURIComponent(altitude);
-
-    const controller = new AbortController();
-
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 30000);
-
-    const response = await fetch(url, {
-      cache: "no-store",
-      signal: controller.signal
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      throw new Error(
-        "Weather request failed: HTTP " + response.status
-      );
-    }
-
-    const data = await response.json();
-
-    selectedDropzone =
-      allDropzones.find(
-        item => item.id === data.dropzone.id
-      ) || selectedDropzone;
-
-    if (selectedDropzone) {
-      selectedDropzone.ground_elevation_ft =
-        data.dropzone.ground_elevation_ft;
-    }
-
-    updateAltitude();
-    renderJumpWind(data);
-    renderCurrent(data);
-    renderHours(data);
-    renderMetar(data);
-
-  } catch (error) {
-    console.error(error);
-
-    jumpWindEl.innerHTML = `
-      <div class="error">Could not load live weather.</div>
-    `;
-
-    currentEl.innerHTML = `
-      <div class="error">
-        Weather data is temporarily unavailable.
-      </div>
-    `;
-
-    hoursEl.innerHTML = `
-      <div class="error">
-        Hourly forecast is temporarily unavailable.
-      </div>
-    `;
-
-    metarEl.innerHTML = `
-      <div class="muted">
-        Aviation observation unavailable.
-      </div>
-    `;
-  }
-}
-
-async function loadDropzones() {
-  try {
-    const response = await fetch("/api/dropzones", {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        "Drop zone directory failed: HTTP " + response.status
-      );
-    }
-
-    const data = await response.json();
-
-    allDropzones = Array.isArray(data.dropzones)
-      ? data.dropzones
-      : [];
-
-    dzMetaEl.textContent =
-      `${data.count || allDropzones.length} current North American USPA-affiliated locations`;
-
-    renderDropzoneOptions();
-
-    await loadWeather();
-
-  } catch (error) {
-    console.error(error);
-
-    dzEl.innerHTML = `
-      <option value="">Could not load drop zone directory</option>
-    `;
-
-    dzMetaEl.textContent =
-      "The USPA directory could not be loaded. Please refresh the page.";
-  }
-}
-
-dzEl.addEventListener("change", () => {
-  updateSelectedDropzone();
-  loadWeather();
-});
-
-dzSearchEl.addEventListener("input", () => {
-  renderDropzoneOptions(dzSearchEl.value);
-});
-
-favoriteButtonEl.addEventListener("click", toggleFavorite);
-
-removeFavoriteButtonEl.addEventListener("click", () => {
-  if (!selectedDropzone || !isFavorite(selectedDropzone.id)) return;
-  favoriteDropzoneIds = favoriteDropzoneIds.filter(
-    id => id !== selectedDropzone.id
-  );
-  saveFavorites();
-  renderFavorites();
-  favoritesEl.value = "";
-  updateFavoriteButton();
-});
-
-favoritesEl.addEventListener("change", () => {
-  const id = favoritesEl.value;
-  if (!id) return;
-
-  const favorite = allDropzones.find(dz => dz.id === id);
-  if (!favorite) return;
-
-  dzEl.value = favorite.id;
-  updateSelectedDropzone();
-  dzSearchEl.value = "";
-  renderDropzoneOptions("");
-  dzEl.value = favorite.id;
-  updateSelectedDropzone();
-});
-
-renderFavorites();
-
-altEl.addEventListener("change", () => {
-  updateAltitude();
-  loadWeather();
-});
-
-altEl.addEventListener("input", updateAltitude);
-
-loadDropzones();
-</script>
-</body>
-</html>
+    favoritesEl.value = selectedDropzon
