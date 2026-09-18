@@ -132,7 +132,10 @@ const physicalAddress=String(
     name,
 physicalAddress,
 
-    icao:deriveIcao(airport,country),
+    icao:
+  name === "Skydive Tecumseh"
+    ? "KJXN"
+    : deriveIcao(airport,country),
     lat,
     lon,
     elevation_ft:null,
