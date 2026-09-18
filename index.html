@@ -380,6 +380,30 @@ input {
     background-attachment: fixed;
   }
     }
+
+    .jumpcast-photos {
+  padding: 10px;
+}
+
+.jumpcast-photo-row {
+  display: flex;
+  gap: 8px;
+  height: 140px;
+}
+
+.jumpcast-photo-row img {
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.jumpcast-quote {
+  text-align: center;
+  font-style: italic;
+  font-size: 13px;
+  margin-top: 8px;
+}
   </style>
 </head>
 
@@ -477,7 +501,18 @@ input {
     </p>
   </section>
 
-  <div class="footer">Mobile app &amp; website created by Timothy Howell</div>
+ <section class="card jumpcast-photos">
+  <div class="jumpcast-photo-row">
+    <img src="/Screenshot_20260713-211034.Photos~3.jpg" alt="Skydiving photo">
+    <img src="/Screenshot_20260917-191104.Photos.png" alt="Skydiving photo">
+  </div>
+
+  <div class="jumpcast-quote">
+    “The sky isn't the limit. It's home.”
+  </div>
+ </section>
+    
+    <div class="footer">Mobile app &amp; website created by Timothy Howell</div>
 </main>
 
 <script>
