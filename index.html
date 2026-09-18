@@ -16,12 +16,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background: rgba(3, 17, 35, 0.88);
+  background: rgba(3, 17, 35, 0.78);
   border: 1px solid rgba(110, 190, 255, 0.45);
   border-radius: 22px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  
 }
 
 .nav-brand {
@@ -132,8 +131,8 @@ body {
 .card {
   background: linear-gradient(
     135deg,
-    rgba(5, 28, 52, 0.82),
-    rgba(3, 19, 39, 0.72)
+    rgba(5, 28, 52, 0.72),
+    rgba(3, 19, 39, 0.62)
   );
   border: 1px solid rgba(80, 190, 255, 0.65);
   border-radius: 18px;
@@ -142,8 +141,7 @@ body {
   box-shadow:
     0 14px 40px rgba(0, 0, 0, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  
 }
 
 .card h2 {
@@ -424,7 +422,7 @@ input {
 <main class="app">
   
 
-  <se
+  
 
   <section class="card" id="dropzones">
     <h2>Drop Zone</h2>
@@ -450,18 +448,10 @@ input {
 
   
 
-  <section class="card">
-    <h2>Jump Altitude</h2>
-    <label for="alt">Altitude MSL (feet)</label>
-    <input id="alt" type="number" value="12500" min="1000" max="20000" step="500">
-    <div class="alt-info">
-      <span>MSL: <strong id="msl">12,500 ft</strong></span>
-      <span>AGL: <strong id="agl">—</strong></span>
-    </div>
-  </section>
+  
 
   <section class="card">
-    <h2>Wind at Jump Altitude</h2>
+    <h2>Winds Aloft</h2>
     <div id="jumpWind"><div class="loading">Loading live conditions...</div></div>
   </section>
 
@@ -470,47 +460,17 @@ input {
     <div id="current"><div class="loading">Loading current conditions...</div></div>
   </section>
 
-  <section class="card">
-    <h2>Next 12 Hours</h2>
-    <div id="hours"><div class="loading">Loading hourly forecast...</div></div>
-  </section>
+  
 
-  <section class="card">
-    <h2>Altitude Calculation</h2>
-    <p id="altitudeNote" class="muted">
-      Wind is being calculated for your selected MSL altitude.
-    </p>
-  </section>
+  
 
-  <section class="card">
-    <h2>Aviation Observation</h2>
-    <div id="metar"><div class="loading">Loading aviation observation...</div></div>
-  </section>
+  
 
-  <section class="card">
-    <h2>Community Reports</h2>
-    <p class="muted">Community reports will appear here in a future update.</p>
-  </section>
+  
 
-  <section class="card">
-    <h2>Safety &amp; Data Note</h2>
-    <p class="muted">
-      JumpCast provides weather information and model-derived wind estimates.
-      It does not authorize a jump or replace the DZ's operating decision,
-      pilot or instructor judgment, applicable regulations, or current local observations.
-    </p>
-  </section>
+  
 
- <section class="card jumpcast-photos">
-  <div class="jumpcast-photo-row">
-    <img src="/Screenshot_20260713-211034.Photos~3.jpg" alt="Skydiving photo">
-    <img src="/Screenshot_20260917-191104.Photos.png" alt="Skydiving photo">
-  </div>
-
-  <div class="jumpcast-quote">
-    “The sky isn't the limit. It's home.”
-  </div>
- </section>
+ 
     
     <div class="footer">Mobile app &amp; website created by Timothy Howell</div>
 </main>
@@ -526,14 +486,8 @@ const removeFavoriteButtonEl = document.getElementById("removeFavoriteButton");
 const nearbyButtonEl = document.getElementById("nearbyButton");
 const nearbyStatusEl = document.getElementById("nearbyStatus");
 const nearbyListEl = document.getElementById("nearbyList");
-const altEl = document.getElementById("alt");
-const mslEl = document.getElementById("msl");
-const aglEl = document.getElementById("agl");
 const jumpWindEl = document.getElementById("jumpWind");
 const currentEl = document.getElementById("current");
-const hoursEl = document.getElementById("hours");
-const altitudeNoteEl = document.getElementById("altitudeNote");
-const metarEl = document.getElementById("metar");
 const windUnitEl = document.getElementById("windUnit");
 const tempUnitEl = document.getElementById("tempUnit");
 const visibilityUnitEl = document.getElementById("visibilityUnit");
@@ -1033,7 +987,7 @@ function updateSelectedDropzone() {
       ? " • " + selectedDropzone.airport
       : "");
 
-  updateAltitude();
+  
   updateFavoriteButton();
 
   favoritesEl.value =
@@ -1042,22 +996,7 @@ function updateSelectedDropzone() {
       : "";
 }
 
-function updateAltitude() {
-  const altitude = Number(altEl.value) || 12500;
 
-  mslEl.textContent = formatNumber(altitude) + " ft";
-
-  const elevation = selectedDropzone?.ground_elevation_ft;
-
-  if (Number.isFinite(Number(elevation))) {
-    aglEl.textContent =
-      formatNumber(
-        Math.max(0, altitude - Number(elevation))
-      ) + " ft";
-  } else {
-    aglEl.textContent = "—";
-  }
-}
 
 function renderJumpWind(data) {
   const wind = data.jumpWind;
@@ -1068,9 +1007,7 @@ function renderJumpWind(data) {
     return;
   }
 
-  aglEl.textContent =
-    formatNumber(data.jumpAltitude.agl_ft) + " ft";
-
+  
   jumpWindEl.innerHTML = `
     <div class="big-wind">${windText(wind.speed_kt, 1)}</div>
     <div class="wind-direction">
@@ -1108,8 +1045,7 @@ function renderJumpWind(data) {
     </div>
   `;
 
-  altitudeNoteEl.textContent =
-    "JumpCast uses pressure-level wind data and geopotential heights to estimate wind at the selected MSL altitude.";
+  
 }
 
 function renderCurrent(data) {
@@ -1164,86 +1100,20 @@ function renderCurrent(data) {
   `;
 }
 
-function renderHours(data) {
-  const series = data.jumpWindSeries || [];
 
-  if (!series.length) {
-    hoursEl.innerHTML =
-      '<div class="error">Hourly forecast unavailable.</div>';
-    return;
-  }
 
-  const nextHours = series.slice(1, 13);
-  hoursEl.innerHTML = "";
 
-  if (!nextHours.length) {
-    hoursEl.innerHTML =
-      '<div class="muted">No future hourly forecast is available.</div>';
-    return;
-  }
-
-  nextHours.forEach(item => {
-    const row = document.createElement("div");
-    row.className = "hour";
-
-    row.innerHTML = `
-      <div>
-        <div class="hour-time">${formatLocalTime(item.time)}</div>
-        <div class="hour-sub">
-          From ${formatNumber(item.direction_deg, 0)}°
-          (${directionName(item.direction_deg)})
-        </div>
-      </div>
-      <div class="hour-wind">${windText(item.speed_kt, 1)}</div>
-    `;
-
-    hoursEl.appendChild(row);
-  });
-}
-
-function renderMetar(data) {
-  const metar = Array.isArray(data.metar) ? data.metar : [];
-
-  if (!metar.length) {
-    metarEl.innerHTML = `
-      <div class="muted">
-        No recent aviation observation was returned for this drop zone.
-      </div>
-    `;
-    return;
-  }
-
-  const latest = metar[metar.length - 1];
-  let raw = "";
-
-  if (typeof latest === "string") raw = latest;
-  else if (latest?.rawOb) raw = latest.rawOb;
-  else if (latest?.raw) raw = latest.raw;
-  else raw = JSON.stringify(latest);
-
-  metarEl.innerHTML = `
-    <div class="metric">
-      <div class="metric-title">Latest aviation observation</div>
-      <div class="metric-value">${raw}</div>
-    </div>
-  `;
-}
 
 async function loadWeather() {
-  updateAltitude();
 
   if (!selectedDropzone) return;
 
-  const altitude = Number(altEl.value) || 12500;
+  const altitude = 12500;
 
   jumpWindEl.innerHTML =
     '<div class="loading">Loading live conditions...</div>';
   currentEl.innerHTML =
     '<div class="loading">Loading current conditions...</div>';
-  hoursEl.innerHTML =
-    '<div class="loading">Loading hourly forecast...</div>';
-  metarEl.innerHTML =
-    '<div class="loading">Loading aviation observation...</div>';
 
   try {
     const response = await fetch(
@@ -1264,11 +1134,9 @@ async function loadWeather() {
     selectedDropzone =
       data.dropzone || selectedDropzone;
 
-    updateAltitude();
+    
     renderJumpWind(data);
     renderCurrent(data);
-    renderHours(data);
-    renderMetar(data);
   } catch (error) {
     console.error(error);
     lastWeatherData = null;
@@ -1277,10 +1145,6 @@ async function loadWeather() {
       '<div class="error">Could not load live weather.</div>';
     currentEl.innerHTML =
       '<div class="error">Weather data is temporarily unavailable.</div>';
-    hoursEl.innerHTML =
-      '<div class="error">Hourly forecast is temporarily unavailable.</div>';
-    metarEl.innerHTML =
-      '<div class="muted">Aviation observation unavailable.</div>';
   }
 }
 
@@ -1311,7 +1175,7 @@ async function loadDropzones() {
       `${count} current North American USPA-affiliated locations`;
 
     renderDropzoneOptions();
-    renderFavorites();
+    
     updateSelectedDropzone();
     await loadWeather();
   } catch (error) {
@@ -1332,8 +1196,8 @@ function rerenderWeather() {
   if (!lastWeatherData) return;
   renderJumpWind(lastWeatherData);
   renderCurrent(lastWeatherData);
-  renderHours(lastWeatherData);
-  renderMetar(lastWeatherData);
+  
+  
 }
 
 function settingsChanged() {
@@ -1355,10 +1219,7 @@ function applySettingsToControls() {
   timeFormatEl.value = displaySettings.time;
 }
 
-windUnitEl.addEventListener("change", settingsChanged);
-tempUnitEl.addEventListener("change", settingsChanged);
-visibilityUnitEl.addEventListener("change", settingsChanged);
-timeFormatEl.addEventListener("change", settingsChanged);
+
 
 dzEl.addEventListener("change", () => {
   updateSelectedDropzone();
@@ -1371,45 +1232,15 @@ dzSearchEl.addEventListener("input", () => {
 
 favoriteButtonEl.addEventListener("click", toggleFavorite);
 
-nearbyButtonEl.addEventListener("click", findNearbyDropzones);
 
-removeFavoriteButtonEl.addEventListener("click", () => {
-  if (!selectedDropzone || !isFavorite(selectedDropzone.id)) return;
 
-  const id = String(selectedDropzone.id);
 
-  favoriteDropzoneIds =
-    favoriteDropzoneIds.filter(item => item !== id);
 
-  saveFavorites();
-  renderFavorites();
 
-  favoritesEl.value = "";
-  updateFavoriteButton();
-});
 
-favoritesEl.addEventListener("change", () => {
-  const id = String(favoritesEl.value || "");
-  if (!id) return;
 
-  const favorite =
-    allDropzones.find(dz => String(dz.id) === id);
 
-  if (!favorite) return;
 
-  dzSearchEl.value = "";
-  renderDropzoneOptions("");
-  dzEl.value = String(favorite.id);
-  updateSelectedDropzone();
-  loadWeather();
-});
-
-altEl.addEventListener("change", () => {
-  updateAltitude();
-  loadWeather();
-});
-
-applySettingsToControls();
 loadDropzones();
 </script>
 
