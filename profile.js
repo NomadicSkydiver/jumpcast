@@ -421,6 +421,10 @@ const directionsUrl = mapQuery
     addStyles();
     createCard();
     updateProfile();
+      document.addEventListener(
+  "dropcast:dropzonechange",
+  updateProfile
+);
 
     const select =
       document.getElementById("dz");
