@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background: rgba(3, 17, 35, 0.78);
+  background: rgba(3, 17, 35);
   border: 1px solid rgba(110, 190, 255, 0.45);
   border-radius: 22px;
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
@@ -665,7 +665,7 @@ function updateFavoriteButton() {
     favoriteButtonEl.textContent = "☆ Add to Favorites";
     favoriteButtonEl.classList.remove("active");
     favoriteStatusEl.textContent = "";
-    removeFavoriteButtonEl.style.display = "none";
+    
     return;
   }
 
@@ -673,12 +673,12 @@ function updateFavoriteButton() {
     favoriteButtonEl.textContent = "★ Remove from Favorites";
     favoriteButtonEl.classList.add("active");
     favoriteStatusEl.textContent = "Saved to your favorites on this device.";
-    removeFavoriteButtonEl.style.display = "block";
+    
   } else {
     favoriteButtonEl.textContent = "☆ Add to Favorites";
     favoriteButtonEl.classList.remove("active");
     favoriteStatusEl.textContent = "";
-    removeFavoriteButtonEl.style.display = "none";
+    
   }
 }
 
@@ -739,8 +739,8 @@ function toggleFavorite() {
   }
 
   saveFavorites();
-  renderFavorites();
-  favoritesEl.value = isFavorite(id) ? id : "";
+  
+  
   updateFavoriteButton();
 }
 
@@ -969,7 +969,7 @@ function updateSelectedDropzone() {
 
   if (!selectedDropzone) {
     dzMetaEl.textContent = "Drop zone information unavailable.";
-    aglEl.textContent = "—";
+    
     updateFavoriteButton();
     return;
   }
@@ -990,10 +990,7 @@ function updateSelectedDropzone() {
   
   updateFavoriteButton();
 
-  favoritesEl.value =
-    isFavorite(selectedDropzone.id)
-      ? String(selectedDropzone.id)
-      : "";
+  
 }
 
 
