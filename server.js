@@ -598,7 +598,7 @@ async function getWeatherForDropzone(
   if(dz.icao){
     try{
       metar=await fetchJson(
-        "https://aviationweather.gov/api/data/metars"+
+        "https://aviationweather.gov/api/data/metar"+
         `?ids=${encodeURIComponent(dz.icao)}`+
         "&format=json&hours=2",
         {},
