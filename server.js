@@ -306,6 +306,15 @@ function windAtAltitude(
 
   const surfaceDirection=
     hourly.wind_direction_10m?.[index];
+  if (targetMeters <= groundMeters) {
+  return {
+    speed_kt: surfaceSpeed ?? null,
+    direction_deg: surfaceDirection ?? null,
+    method: "Surface wind",
+    lower_pressure_hpa: null,
+    upper_pressure_hpa: null
+  };
+  }
 
   if(!profile.length){
     return {
@@ -406,7 +415,8 @@ function groundElevationFt(baseData){
 function addJumpWindData(baseData,targetAltitudeFt){
   const hourly = baseData.forecast.hourly;
   const groundElevation = groundElevationFt(baseData);
-
+const targetAltitudeMslFt =
+  groundElevation + targetAltitudeFt;
   // Open-Meteo returns local wall-clock timestamps because
   // the request uses timezone=auto. Treat those timestamps
   // as wall-clock values instead of converting them through
@@ -459,7 +469,7 @@ function addJumpWindData(baseData,targetAltitudeFt){
   const jumpWind = windAtAltitude(
     hourly,
     closestIndex,
-    targetAltitudeFt,
+    targetAltitudeMslFt,
     groundElevation
   );
 
@@ -480,7 +490,7 @@ function addJumpWindData(baseData,targetAltitudeFt){
       ...windAtAltitude(
         hourly,
         i,
-        targetAltitudeFt,
+        targetAltitudeMslFt,
         groundElevation
       )
     });
@@ -496,12 +506,8 @@ function addJumpWindData(baseData,targetAltitudeFt){
     },
 
     jumpAltitude:{
-      msl_ft: targetAltitudeFt,
-      agl_ft: Math.max(
-        0,
-        targetAltitudeFt - groundElevation
-      )
-    },
+      msl_ft: targetAltitudeMslFt,
+      agl_ft: targetAltitudeFt
 
     jumpWind,
     jumpWindSeries
@@ -775,13 +781,18 @@ app.get("/api/weather",async(req,res)=>{
       DZ["fallback-midwest"]||
       Object.values(DZ)[0];
 
-    let targetAltitudeFt=
-      Number(req.query.alt)||12500;
+    const requestedAltitudeFt =
+  Number(req.query.alt);
 
-    targetAltitudeFt=Math.max(
-      1000,
-      Math.min(20000,targetAltitudeFt)
-    );
+let targetAltitudeFt =
+  Number.isFinite(requestedAltitudeFt)
+    ? requestedAltitudeFt
+    : 12000;
+
+targetAltitudeFt = Math.max(
+  0,
+  Math.min(20000, targetAltitudeFt)
+);
 
     const result=
       await getWeatherForDropzone(
