@@ -1558,8 +1558,7 @@ favoritesNavMenuEl.addEventListener("click", (event) => {
   renderDropzoneOptions("");
   dzEl.value = String(dz.id);
 
-  updateSelectedDropzone();
-  loadWeather();
+  dzEl.dispatchEvent(new Event("change"));
 
   favoritesNavMenuEl.style.display = "none";
 
