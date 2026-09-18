@@ -752,6 +752,11 @@ app.get("/more",(req,res)=>{
     path.join(__dirname,"more.html")
   );
 });
+app.get("/weather",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"weather.html")
+  );
+});
 app.get("/api/dropzones",(req,res)=>{
   // Important:
   // Never make the website wait for USPA.
