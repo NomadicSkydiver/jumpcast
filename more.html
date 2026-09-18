@@ -213,7 +213,15 @@ const installButton =
 
 const installMessage =
   document.getElementById("installMessage");
+const isInstalled =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
 
+if (isInstalled) {
+  document.querySelector("#installDropCast h2").textContent = "DropCast";
+  installButton.style.display = "none";
+  installMessage.textContent = "Installed on this device";
+}
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js").catch(error => {
