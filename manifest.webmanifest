@@ -11,13 +11,13 @@
   "theme_color": "#07111f",
   "icons": [
     {
-      "src": "/jumpcast-icon-192-maskable.png",
+      "src": "/dropcast-icon-192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/jumpcast-icon-512-maskable.png",
+      "src": "/dropcast-icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
