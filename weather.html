@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DropCast | Weather</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #f5f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(7, 17, 31, 0.55), rgba(7, 17, 31, 0.55)),
+        url("/jumpcast_background_desktop.jpg") center center / cover fixed;
+    }
+
+    .weather-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 24px 60px;
+    }
+
+    .weather-header {
+      background: #031123;
+      border: 1px solid rgba(110, 190, 255, 0.45);
+      border-radius: 22px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .weather-logo {
+      height: 42px;
+      width: auto;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    .weather-nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .weather-nav .active {
+      color: #71d4ff;
+      border-bottom: 3px solid #37bfff;
+      padding-bottom: 6px;
+    }
+
+    .card {
+      background: rgba(16, 28, 45, 0.70);
+      border: 1px solid #263850;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .selected-dz {
+      color: #9fc8df;
+      margin-top: 6px;
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .metric {
+      background: #071526;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .metric-title {
+      color: #9eabbc;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .hourly-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .hour-row {
+      display: grid;
+      grid-template-columns: 70px 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+      background: #071526;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .hour-time {
+      font-weight: 700;
+    }
+
+    .muted {
+      color: #9eabbc;
+    }
+
+    .loading {
+      color: #aeb9c8;
+    }
+
+    .error {
+      color: #ff9d9d;
+    }
+
+    @media (max-width: 600px) {
+      .weather-page {
+        padding: 14px 14px 50px;
+      }
+
+      .weather-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hour-row {
+        grid-template-columns: 60px 1fr 1fr;
+        font-size: 13px;
+      }
+    }
+  </style>
+  
+</head>
+
+<body>
+
+  <main class="weather-page">
+
+    <header class="weather-header">
+      <img
+        src="/dropcast_windsock_logo.png"
+        alt="DropCast"
+        class="weather-logo"
+      >
+
+      <nav class="weather-nav">
+        <a href="/">⌂ Home</a>
+        <a class="active" href="/weather">☁ Weather</a>
+        <a href="/#dropzones">📍 Drop Zones</a>
+        <a href="/more">☰ More</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h1>Weather</h1>
+      <div id="selectedDzName" class="selected-dz">
+        Loading selected drop zone...
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Current Conditions</h2>
+      <div id="currentConditions" class="weather-grid">
+        <div class="loading">Loading current conditions...</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Hourly Forecast</h2>
+      <div id="hourlyForecast" class="hourly-list">
+        <div class="loading">Loading hourly forecast...</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Aviation &amp; Daylight Conditions</h2>
+      <div id="aviationConditions">
+        <div class="loading">
+          Loading aviation and daylight information...
+        </div>
+      </div>
+    </section>
+
+  </main>
+<script>
+const SELECTED_DZ_KEY = "jumpcastSelectedDropzone";
+
+async function loadSelectedDropzoneWeather() {
+  const selectedId = localStorage.getItem(SELECTED_DZ_KEY);
+
+  if (!selectedId) {
+    document.getElementById("selectedDzName").textContent =
+      "No drop zone selected.";
+    return;
+  }
+
+  try {
+    const dzResponse = await fetch("/api/dropzones", {
+      cache: "no-store"
+    });
+
+    const dzData = await dzResponse.json();
+
+    const selectedDz = dzData.dropzones.find(
+      dz => String(dz.id) === String(selectedId)
+    );
+
+    if (!selectedDz) {
+      document.getElementById("selectedDzName").textContent =
+        "Selected drop zone could not be found.";
+      return;
+    }
+
+    document.getElementById("selectedDzName").textContent =
+      selectedDz.name +
+      (selectedDz.city ? " — " + selectedDz.city : "");
+
+  } catch (error) {
+    document.getElementById("selectedDzName").textContent =
+      "Unable to load selected drop zone.";
+  }
+}
+
+loadSelectedDropzoneWeather();
+</script>
+</body>
+</html>
