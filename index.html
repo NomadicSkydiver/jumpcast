@@ -48,7 +48,57 @@
 text-decoration: none;
 cursor: pointer;
 }
+.favorites-nav {
+  position: relative;
+}
 
+.favorites-nav-button {
+  padding: 8px 2px;
+  border: 0;
+  background: transparent;
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+.favorites-nav-menu {
+  display: none;
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #091526;
+  border: 1px solid #344963;
+  border-radius: 12px;
+  z-index: 200;
+}
+
+.favorite-nav-option {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid #22364f;
+  background: #091526;
+  color: white;
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.favorite-nav-option:last-child {
+  border-bottom: 0;
+}
+
+.favorite-nav-empty {
+  padding: 12px;
+  color: #9fb0c5;
+  text-align: center;
+  font-size: 13px;
+}
 .nav-active {
   color: #71d4ff;
   border-bottom: 3px solid #37bfff;
@@ -484,7 +534,13 @@ input {
     <a class="nav-active" href="#top">⌂ Home</a>
     <a href="#weather">☁ Weather</a>
     <a href="#dropzones">📍 Drop Zones</a>
-    <a href="#favorites">★ Favorites</a>
+    <div class="favorites-nav">
+  <button id="favoritesNavButton" class="favorites-nav-button" type="button">
+    ★ Favorites ▾
+  </button>
+
+  <div id="favoritesNavMenu" class="favorites-nav-menu"></div>
+    </div>
     <a href="#settings">⚙ Settings</a>
     <a href="/more">☰ More</a>
   </div>
@@ -585,6 +641,8 @@ const dzSearchEl = document.getElementById("dzSearch");
 const dzMetaEl = document.getElementById("dzMeta");
 const favoriteButtonEl = document.getElementById("favoriteButton");
 const favoriteStatusEl = document.getElementById("favoriteStatus");
+  const favoritesNavButtonEl = document.getElementById("favoritesNavButton");
+const favoritesNavMenuEl = document.getElementById("favoritesNavMenu");
 const favoritesEl = document.getElementById("favorites");
 const removeFavoriteButtonEl = document.getElementById("removeFavoriteButton");
 const nearbyButtonEl = document.getElementById("nearbyButton");
@@ -616,6 +674,37 @@ let allDropzones = [];
 let selectedDropzone = null;
 let lastWeatherData = null;
 let favoriteDropzoneIds = loadFavorites();
+  function buildFavoritesNavMenu() {
+  favoritesNavMenuEl.innerHTML = "";
+
+  const savedDropzones = favoriteDropzoneIds
+    .map(id =>
+      allDropzones.find(
+        dz => String(dz.id) === String(id)
+      )
+    )
+    .filter(Boolean);
+
+  if (!savedDropzones.length) {
+    const empty = document.createElement("div");
+    empty.className = "favorite-nav-empty";
+    empty.textContent = "No favorites yet";
+    favoritesNavMenuEl.appendChild(empty);
+    return;
+  }
+
+  savedDropzones.forEach(dz => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "favorite-nav-option";
+    button.dataset.id = String(dz.id);
+    button.textContent =
+      dz.name + (dz.city ? " — " + dz.city : "");
+
+    favoritesNavMenuEl.appendChild(button);
+  });
+  }
 function buildWindAltitudeMenu() {
   windAltitudeMenuEl.innerHTML = "";
 
@@ -1364,8 +1453,38 @@ dzSearchEl.addEventListener("input", () => {
 });
 
 favoriteButtonEl.addEventListener("click", toggleFavorite);
+favoritesNavButtonEl.addEventListener("click", () => {
+  buildFavoritesNavMenu();
 
+  favoritesNavMenuEl.style.display =
+    favoritesNavMenuEl.style.display === "block"
+      ? "none"
+      : "block";
+});
+favoritesNavMenuEl.addEventListener("click", (event) => {
+  const optionButton = event.target.closest(".favorite-nav-option");
+  if (!optionButton) return;
 
+  const dz = allDropzones.find(
+    item => String(item.id) === String(optionButton.dataset.id)
+  );
+
+  if (!dz) return;
+
+  dzSearchEl.value = "";
+  renderDropzoneOptions("");
+  dzEl.value = String(dz.id);
+
+  updateSelectedDropzone();
+  loadWeather();
+
+  favoritesNavMenuEl.style.display = "none";
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
 
 
 
