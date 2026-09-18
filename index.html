@@ -1149,7 +1149,7 @@ async function loadWeather() {
 
   if (!selectedDropzone) return;
 
-  const altitude = 12500;
+  const altitude = Number(windAltitudeEl.value);
 
   jumpWindEl.innerHTML =
     '<div class="loading">Loading live conditions...</div>';
@@ -1266,7 +1266,9 @@ dzEl.addEventListener("change", () => {
   updateSelectedDropzone();
   loadWeather();
 });
-
+windAltitudeEl.addEventListener("change", () => {
+  loadWeather();
+});
 dzSearchEl.addEventListener("input", () => {
   renderDropzoneOptions(dzSearchEl.value);
 });
