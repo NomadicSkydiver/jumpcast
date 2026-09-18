@@ -649,7 +649,7 @@ app.get("/Screenshot_20260917-192839.Photos.png",(req,res)=>{
 });
 app.get("/dropcast_windsock_weather_logo.png",(req,res)=>{
   res.sendFile(
-    path.join(__dirname,"dropcast_windsock_weather_logo.png")
+    path.join(__dirname,"dropcast_windsock_weather_logo-1.png")
   );
 });
 app.get("/Screenshot_20260713-211034.Photos~3.jpg",(req,res)=>{
