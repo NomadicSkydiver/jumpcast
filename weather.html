@@ -488,20 +488,20 @@
       return `${number.toFixed(1)} kt`;
     }
 
-    function visibilityDisplay(valueKm, settings) {
-      let number = Number(valueKm);
+    function visibilityDisplay(valueMeters, settings) {
+  const meters = Number(valueMeters);
 
-      if (!Number.isFinite(number)) {
-        return "Unavailable";
-      }
+  if (!Number.isFinite(meters)) {
+    return "Unavailable";
+  }
 
-      if (settings.visibility === "mi") {
-        number /= 1.609344;
+  const km = meters / 1000;
 
-        return `${number.toFixed(1)} mi`;
-      }
+  if (settings.visibility === "mi") {
+    return `${(km * 0.621371).toFixed(1)} mi`;
+  }
 
-      return `${number.toFixed(1)} km`;
+  return `${km.toFixed(1)} km`;
     }
 
     function renderCurrentConditions(data) {
