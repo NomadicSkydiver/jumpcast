@@ -166,6 +166,54 @@ body {
   padding: 8px 10px;
   font-size: 14px;
 }
+    .compact-altitude-menu {
+  display: none;
+}
+
+.wind-altitude-button {
+  width: 110px;
+  padding: 8px 10px;
+  border: 1px solid #344963;
+  border-radius: 10px;
+  background: #091526;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.winds-aloft-header {
+  position: relative;
+}
+
+.wind-altitude-menu {
+  display: none;
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 130px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #091526;
+  border: 1px solid #344963;
+  border-radius: 10px;
+  z-index: 100;
+}
+    .wind-altitude-option {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid #22364f;
+  background: #091526;
+  color: #ffffff;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.wind-altitude-option:last-child {
+  border-bottom: 0;
+}
 select,
 input {
   background: rgba(4, 18, 36, 0.82);
@@ -470,7 +518,13 @@ input {
   <section class="card">
     <div class="winds-aloft-header">
   <h2>Winds Aloft</h2>
-      <select id="windAltitude" aria-label="Select wind altitude">
+    <button id="windAltitudeButton" class="wind-altitude-button" type="button">
+  Ground ▾
+    </button>
+
+      <div id="windAltitudeMenu" class="wind-altitude-menu"></div>
+      
+      <select id="windAltitude" class="compact-altitude-menu" aria-label="Select wind altitude">
   <option value="0">Ground</option>
   <option value="1000">1k ft</option>
   <option value="2000">2k ft</option>
@@ -531,6 +585,8 @@ const nearbyStatusEl = document.getElementById("nearbyStatus");
 const nearbyListEl = document.getElementById("nearbyList");
 const jumpWindEl = document.getElementById("jumpWind");
   const windAltitudeEl = document.getElementById("windAltitude");
+  const windAltitudeButtonEl = document.getElementById("windAltitudeButton");
+const windAltitudeMenuEl = document.getElementById("windAltitudeMenu");
 const currentEl = document.getElementById("current");
 const windUnitEl = document.getElementById("windUnit");
 const tempUnitEl = document.getElementById("tempUnit");
@@ -553,7 +609,20 @@ let allDropzones = [];
 let selectedDropzone = null;
 let lastWeatherData = null;
 let favoriteDropzoneIds = loadFavorites();
+function buildWindAltitudeMenu() {
+  windAltitudeMenuEl.innerHTML = "";
 
+  Array.from(windAltitudeEl.options).forEach(option => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "wind-altitude-option";
+    button.textContent = option.textContent;
+    button.dataset.value = option.value;
+
+    windAltitudeMenuEl.appendChild(button);
+  });
+}
 function loadDisplaySettings() {
   try {
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
@@ -1266,6 +1335,20 @@ dzEl.addEventListener("change", () => {
   updateSelectedDropzone();
   loadWeather();
 });
+  windAltitudeButtonEl.addEventListener("click", () => {
+  windAltitudeMenuEl.style.display =
+    windAltitudeMenuEl.style.display === "block" ? "none" : "block";
+});
+  windAltitudeMenuEl.addEventListener("click", (event) => {
+  const optionButton = event.target.closest(".wind-altitude-option");
+  if (!optionButton) return;
+
+  windAltitudeEl.value = optionButton.dataset.value;
+  windAltitudeButtonEl.textContent = optionButton.textContent + " ▾";
+  windAltitudeMenuEl.style.display = "none";
+
+  windAltitudeEl.dispatchEvent(new Event("change"));
+});
 windAltitudeEl.addEventListener("change", () => {
   loadWeather();
 });
@@ -1283,7 +1366,7 @@ favoriteButtonEl.addEventListener("click", toggleFavorite);
 
 
 
-
+buildWindAltitudeMenu();
 loadDropzones();
 </script>
 
