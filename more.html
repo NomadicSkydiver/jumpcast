@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/dropcast-icon-192.png">
   <title>DropCast | More</title>
 
   <style>
@@ -122,7 +127,15 @@
   <main class="more-page">
 
     <h1>More</h1>
-
+<section class="card" id="installDropCast">
+  <h2>Install DropCast</h2>
+  <p id="installMessage">
+    Install DropCast on your phone for quick access like a regular app.
+  </p>
+  <button id="installAppButton" type="button">
+    Install DropCast
+  </button>
+</section>
     <section class="card">
       <h2>Aviation Observation</h2>
       <p>
@@ -191,6 +204,53 @@
     </section>
 
   </main>
+<script>
+let deferredInstallPrompt = null;
 
+const installButton =
+  document.getElementById("installAppButton");
+
+const installMessage =
+  document.getElementById("installMessage");
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(error => {
+      console.error(
+        "DropCast service worker registration failed:",
+        error
+      );
+    });
+  });
+}
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+});
+
+installButton.addEventListener("click", async () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+
+    await deferredInstallPrompt.userChoice;
+
+    deferredInstallPrompt = null;
+    return;
+  }
+
+  const isIOS =
+    /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  if (isIOS) {
+    installMessage.textContent =
+      "On iPhone or iPad: tap the Share button in Safari, then choose Add to Home Screen.";
+    return;
+  }
+
+  installMessage.textContent =
+    "If the install window does not appear, open your browser menu and choose Install app or Add to Home screen.";
+});
+</script>
 </body>
 </html>
