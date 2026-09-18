@@ -1,7 +1,7 @@
 {
   "id": "https://jumpcast.onrender.com/",
-  "name": "JumpCast",
-  "short_name": "JumpCast",
+  "name": "DropCast",
+"short_name": "DropCast",
   "description": "Skydiving weather information at a glance.",
   "start_url": "/",
   "scope": "/",
