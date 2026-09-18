@@ -722,6 +722,26 @@ app.get("/jumpcast-icon-512.png",(req,res)=>{
     path.join(__dirname,"jumpcast-icon-512.png")
   );
 });
+app.get("/dropcast-icon-192-maskable.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"dropcast-icon-192-maskable.png")
+  );
+});
+app.get("/dropcast-icon-512-maskable.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"dropcast-icon-512-maskable.png")
+  );
+});
+app.get("/dropcast-icon-192.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"dropcast-icon-192.png")
+  );
+});
+app.get("/dropcast-icon-512.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"dropcast-icon-512.png")
+  );
+});
 app.get("/",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"index.html")
