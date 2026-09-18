@@ -652,6 +652,11 @@ app.get("/dropcast_windsock_weather_logo.png",(req,res)=>{
     path.join(__dirname,"dropcast_windsock_weather_logo-1.png")
   );
 });
+app.get("/dropcast_windsock_logo.png",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"dropcast_windsock_logo.png")
+  );
+});
 app.get("/Screenshot_20260713-211034.Photos~3.jpg",(req,res)=>{
   res.sendFile(
     path.join(__dirname,"Screenshot_20260713-211034.Photos~3.jpg")
