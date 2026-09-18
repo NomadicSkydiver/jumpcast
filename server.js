@@ -747,7 +747,11 @@ app.get("/",(req,res)=>{
     path.join(__dirname,"index.html")
   );
 });
-
+app.get("/more",(req,res)=>{
+  res.sendFile(
+    path.join(__dirname,"more.html")
+  );
+});
 app.get("/api/dropzones",(req,res)=>{
   // Important:
   // Never make the website wait for USPA.
