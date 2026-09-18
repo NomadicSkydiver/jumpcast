@@ -99,6 +99,53 @@ cursor: pointer;
   text-align: center;
   font-size: 13px;
 }
+    .settings-nav {
+  position: relative;
+}
+
+.settings-nav-button {
+  padding: 8px 2px;
+  border: 0;
+  background: transparent;
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+.settings-nav-menu {
+  display: none;
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 210px;
+  padding: 12px;
+  background: #091526;
+  border: 1px solid #344963;
+  border-radius: 12px;
+  z-index: 200;
+}
+
+.settings-nav-menu label {
+  display: block;
+  margin: 8px 0 4px;
+  color: #9fb0c5;
+  font-size: 12px;
+}
+
+.settings-nav-menu label:first-child {
+  margin-top: 0;
+}
+
+.settings-nav-menu select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #344963;
+  border-radius: 8px;
+  background: #07111f;
+  color: white;
+  font-size: 13px;
+}
 .nav-active {
   color: #71d4ff;
   border-bottom: 3px solid #37bfff;
@@ -541,7 +588,38 @@ input {
 
   <div id="favoritesNavMenu" class="favorites-nav-menu"></div>
     </div>
-    <a href="#settings">⚙ Settings</a>
+    <div class="settings-nav">
+  <button id="settingsNavButton" class="settings-nav-button" type="button">
+    ⚙ Settings ▾
+  </button>
+
+  <div id="settingsNavMenu" class="settings-nav-menu">
+    <label for="windUnit">Wind</label>
+    <select id="windUnit">
+      <option value="kt">Knots</option>
+      <option value="mph">MPH</option>
+      <option value="kph">KM/H</option>
+    </select>
+
+    <label for="tempUnit">Temperature</label>
+    <select id="tempUnit">
+      <option value="f">Fahrenheit</option>
+      <option value="c">Celsius</option>
+    </select>
+
+    <label for="visibilityUnit">Visibility</label>
+    <select id="visibilityUnit">
+      <option value="mi">Miles</option>
+      <option value="km">Kilometers</option>
+    </select>
+
+    <label for="timeFormat">Time</label>
+    <select id="timeFormat">
+      <option value="12">12-hour</option>
+      <option value="24">24-hour</option>
+   </select>
+</div>
+    </div>
     <a href="/more">☰ More</a>
   </div>
 
@@ -643,6 +721,8 @@ const favoriteButtonEl = document.getElementById("favoriteButton");
 const favoriteStatusEl = document.getElementById("favoriteStatus");
   const favoritesNavButtonEl = document.getElementById("favoritesNavButton");
 const favoritesNavMenuEl = document.getElementById("favoritesNavMenu");
+  const settingsNavButtonEl = document.getElementById("settingsNavButton");
+const settingsNavMenuEl = document.getElementById("settingsNavMenu");
 const favoritesEl = document.getElementById("favorites");
 const removeFavoriteButtonEl = document.getElementById("removeFavoriteButton");
 const nearbyButtonEl = document.getElementById("nearbyButton");
@@ -1490,11 +1570,21 @@ favoritesNavMenuEl.addEventListener("click", (event) => {
 });
 
 
+settingsNavButtonEl.addEventListener("click", () => {
+  favoritesNavMenuEl.style.display = "none";
+
+  settingsNavMenuEl.style.display =
+    settingsNavMenuEl.style.display === "block"
+      ? "none"
+      : "block";
+});
+windUnitEl.addEventListener("change", settingsChanged);
+tempUnitEl.addEventListener("change", settingsChanged);
+visibilityUnitEl.addEventListener("change", settingsChanged);
+timeFormatEl.addEventListener("change", settingsChanged);
 
 
-
-
-
+applySettingsToControls();
 buildWindAltitudeMenu();
 loadDropzones();
 </script>
