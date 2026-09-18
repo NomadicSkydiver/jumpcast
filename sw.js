@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumpcast-v2";
+const CACHE_NAME = "dropcast-v1.0.0";
 
 const APP_SHELL = [
   "/",
