@@ -397,7 +397,7 @@ const directionsUrl = mapQuery
 
         <div class="source">
           Information from the current
-          JumpCast USPA-affiliated directory.
+          DropCast USPA-affiliated directory.
         </div>
       `;
 
