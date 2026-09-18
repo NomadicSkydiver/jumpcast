@@ -508,6 +508,7 @@ const targetAltitudeMslFt =
     jumpAltitude:{
       msl_ft: targetAltitudeMslFt,
       agl_ft: targetAltitudeFt
+        },
 
     jumpWind,
     jumpWindSeries
