@@ -148,7 +148,24 @@ body {
   font-size: 20px;
   letter-spacing: 0.2px;
 }
+.winds-aloft-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
 
+.winds-aloft-header h2 {
+  margin: 0;
+}
+
+#windAltitude {
+  width: auto;
+  min-width: 105px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
 select,
 input {
   background: rgba(4, 18, 36, 0.82);
@@ -451,7 +468,32 @@ input {
   
 
   <section class="card">
-    <h2>Winds Aloft</h2>
+    <div class="winds-aloft-header">
+  <h2>Winds Aloft</h2>
+      <select id="windAltitude" aria-label="Select wind altitude">
+  <option value="0">Ground</option>
+  <option value="1000">1k ft</option>
+  <option value="2000">2k ft</option>
+  <option value="3000">3k ft</option>
+  <option value="4000">4k ft</option>
+  <option value="5000">5k ft</option>
+  <option value="6000">6k ft</option>
+  <option value="7000">7k ft</option>
+  <option value="8000">8k ft</option>
+  <option value="9000">9k ft</option>
+  <option value="10000">10k ft</option>
+  <option value="11000">11k ft</option>
+  <option value="12000">12k ft</option>
+  <option value="13000">13k ft</option>
+  <option value="14000">14k ft</option>
+  <option value="15000">15k ft</option>
+  <option value="16000">16k ft</option>
+  <option value="17000">17k ft</option>
+  <option value="18000">18k ft</option>
+  <option value="19000">19k ft</option>
+  <option value="20000">20k ft</option>
+      </select>
+    </div>
     <div id="jumpWind"><div class="loading">Loading live conditions...</div></div>
   </section>
 
@@ -488,6 +530,7 @@ const nearbyButtonEl = document.getElementById("nearbyButton");
 const nearbyStatusEl = document.getElementById("nearbyStatus");
 const nearbyListEl = document.getElementById("nearbyList");
 const jumpWindEl = document.getElementById("jumpWind");
+  const windAltitudeEl = document.getElementById("windAltitude");
 const currentEl = document.getElementById("current");
 const windUnitEl = document.getElementById("windUnit");
 const tempUnitEl = document.getElementById("tempUnit");
